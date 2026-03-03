@@ -1,3 +1,4 @@
+import "./envConfig"; // validates environment variables
 import express, { Express } from "express";
 import flowRouter from "./routes/flowRoutes";
 
