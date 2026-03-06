@@ -1,12 +1,11 @@
-import { DeleteObjectCommand, PutObjectCommand } from "@aws-sdk/client-s3"
-import { flowS3Client } from "../clients/flowS3Client"
-import { envConfig } from "../envConfig"
-
+import { DeleteObjectCommand, PutObjectCommand } from "@aws-sdk/client-s3";
+import { flowS3Client } from "../clients/flowS3Client";
+import { envConfig } from "../envConfig";
 
 export const uploadFileToS3 = async (
     s3Key: string,
     fileBuffer: Buffer,
-    mimeType: string,
+    mimeType: string
 ): Promise<boolean> => {
     try {
         await flowS3Client.send(
@@ -18,26 +17,30 @@ export const uploadFileToS3 = async (
             })
         );
 
-        return true
+        return true;
     } catch (e) {
-        console.log(`s3 file upload failed - s3Key: ${s3Key}, errorMessage: ${(e as Error).message}`);
-        
+        console.log(
+            `s3 file upload failed - s3Key: ${s3Key}, errorMessage: ${
+                (e as Error).message
+            }`
+        );
+
         return false;
     }
-}
+};
 
 
-export const deleteFileFromS3 = async (
-    s3Key: string
-): Promise<boolean> => {
+export const deleteFileFromS3 = async (s3Key: string): Promise<boolean> => {
     try {
-        await flowS3Client.send(new DeleteObjectCommand({
-            Bucket: envConfig.AWS_BUCKET_NAME,
-            Key: s3Key
-        }));
+        await flowS3Client.send(
+            new DeleteObjectCommand({
+                Bucket: envConfig.AWS_BUCKET_NAME,
+                Key: s3Key,
+            })
+        );
 
         return true;
-    } catch(e) {
+    } catch (e) {
         console.log(
             `could not delete from S3, S3Key is `,
             s3Key,
@@ -47,4 +50,18 @@ export const deleteFileFromS3 = async (
 
         return false;
     }
-}
+};
+
+
+/**
+ * constructs the public URL for a file in S3.
+ *
+ * format: `https://<bucket>.s3.<region>.amazonaws.com/<key>`
+ * bucket and region come from pre-set config.
+ *
+ * e.g. "myKey.mp3" → "https://my-bucket.s3.us-east-1.amazonaws.com/myKey.mp3"
+ */
+export const constructFilePublicUrlS3 = (s3Key: string) => {
+    const url = `https://${envConfig.AWS_BUCKET_NAME}.s3.${envConfig.AWS_REGION}.amazonaws.com/${s3Key}`;
+    return url;
+};

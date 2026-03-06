@@ -1,10 +1,12 @@
 import { parseBuffer } from "music-metadata";
 import fs from "fs";
 import path from "path";
-import { envConfig } from "../../../envConfig";
 import { s3AlbumArtPrefix, s3SongPrefix } from "../../../util/constants";
 import { randomUUID } from "crypto";
-import { uploadFileToS3 } from "../../../helpers/s3Helpers";
+import {
+    constructFilePublicUrlS3,
+    uploadFileToS3,
+} from "../../../helpers/s3Helpers";
 import { SongInsertEntity, songsTable } from "../../../schema/song-schema";
 import { flowDb } from "../../../clients/neonDbClient";
 
@@ -92,14 +94,14 @@ const getExtensionFromMimeType = (mimeType: string): string | null => {
 export type AlbumArtS3UploadResult = {
     aaUrl: string;
     aaS3Key: string;
-}
+};
 
 /**
  * uploads album art to S3.
  *
  * if successful, returns the url and S3 key.
  * otherwise, null.
- * 
+ *
  * e.g. { url: "https://bucket.s3.amazonaws.com/album-art/550e8400.jpeg", s3Key: "album-art/550e8400.jpeg" }
  */
 export const uploadAlbumArtToS3 = async (
@@ -115,10 +117,11 @@ export const uploadAlbumArtToS3 = async (
         aaFromFile.mimeType
     );
 
-    if (isUploadSuccess) return {
-        aaUrl: constructFileUrlS3(s3Key),
-        aaS3Key: s3Key,
-    };
+    if (isUploadSuccess)
+        return {
+            aaUrl: constructFilePublicUrlS3(s3Key),
+            aaS3Key: s3Key,
+        };
 
     return null;
 };
@@ -135,19 +138,6 @@ const getAlbumArtS3Key = (fileExt: string): string => {
     const fileName = uuid + "." + fileExt;
     const s3Key = s3AlbumArtPrefix + fileName;
     return s3Key;
-};
-
-/**
- * constructs the public URL for a file in S3.
- *
- * format: `https://<bucket>.s3.<region>.amazonaws.com/<key>`
- * bucket and region come from pre-set config.
- *
- * e.g. "myKey.mp3" → "https://my-bucket.s3.us-east-1.amazonaws.com/myKey.mp3"
- */
-const constructFileUrlS3 = (s3Key: string) => {
-    const url = `https://${envConfig.AWS_BUCKET_NAME}.s3.${envConfig.AWS_REGION}.amazonaws.com/${s3Key}`;
-    return url;
 };
 
 /**
@@ -199,20 +189,22 @@ export const getSongFileInfo = (songFile: Express.Multer.File) => {
     return { songFileExt, songFileStem, songFileMimeType };
 };
 
-
 export const insertSongInDb = async (
     songEntity: SongInsertEntity
 ): Promise<boolean> => {
     try {
         await flowDb.insert(songsTable).values(songEntity);
         return true;
-    } catch(e) {
-        console.log(`db insert failed, songsTable, errorMessage: ${(e as Error).message}`);
-        
+    } catch (e) {
+        console.log(
+            `db insert failed, songsTable, errorMessage: ${
+                (e as Error).message
+            }`
+        );
+
         return false;
     }
-}
-
+};
 
 export const deleteUploadedFile = async (fp: string) => {
     try {
@@ -220,4 +212,4 @@ export const deleteUploadedFile = async (fp: string) => {
     } catch(e) {
         console.log(`failed to delete ${fp}`);
     }
-}
+};

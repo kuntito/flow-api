@@ -1,7 +1,10 @@
 import { pgTable, integer } from "drizzle-orm/pg-core";
-import { songsTable } from "./song-schema";
+import { songQueueTable } from "./songQueue-schema";
 
+/**
+ * table with a single row, single column.
+ * it references the position of the next song in the queue.
+ */
 export const nextSongTable = pgTable("nextSong", {
-    rowId: integer("rowId").primaryKey().default(1),
-    songId: integer("songId").references(() => songsTable.songId),
+    posInQueue: integer("posInQueue").primaryKey().references(() => songQueueTable.pos),
 });
