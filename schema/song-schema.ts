@@ -11,11 +11,3 @@ export const songsTable = pgTable("songs", {
 
 export type SongEntity = typeof songsTable.$inferSelect; 
 export type SongInsertEntity = typeof songsTable.$inferInsert;
-
-
-
-
-export const currentSongTable = pgTable("currentSong", {
-    rowId: integer("rowId").primaryKey().default(1),
-    songId: integer("songId").references(() => songsTable.songId),
-});
