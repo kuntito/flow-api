@@ -13,6 +13,10 @@ dotenv.config();
 
 const requiredVariables = [
     "NEON_CONN_STR",
+    "AWS_REGION",
+    "AWS_ACCESS_KEY",
+    "AWS_SECRET_ACCESS_KEY",
+    "AWS_BUCKET_NAME",
 ] as const;
 
 for (const key of requiredVariables) {

@@ -157,6 +157,14 @@ export default defineConfig({
     `npx drizzle-kit push`
 
 
+** DEPENDENCIES **
++   handles file uploads and saves to temporary location
+    `npm install multer`
+    `npm install -D @types/multer`
+
++   to read music file metadata, supported extensions: (mp3, m4a, flac, wav, ogg):
+    `npm install music-metadata`
+
 ** MISC **
 +   running node files in terminal:
     `npx ts-node filename.ts`
