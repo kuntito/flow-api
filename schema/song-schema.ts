@@ -1,5 +1,6 @@
 import { pgTable, integer, serial, text } from "drizzle-orm/pg-core";
 
+// TODO make table name a variable `songsTN`
 export const songsTable = pgTable("songs", {
     songId: serial("id").primaryKey(),
     songS3Key: text("s3Key").notNull().unique(),

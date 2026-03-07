@@ -1,6 +1,8 @@
-import { DeleteObjectCommand, PutObjectCommand } from "@aws-sdk/client-s3";
+import { DeleteObjectCommand, GetObjectCommand, PutObjectCommand } from "@aws-sdk/client-s3";
 import { flowS3Client } from "../clients/flowS3Client";
 import { envConfig } from "../envConfig";
+import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
+import { secs } from "./miscHelpers";
 
 export const uploadFileToS3 = async (
     s3Key: string,
@@ -65,3 +67,23 @@ export const constructFilePublicUrlS3 = (s3Key: string) => {
     const url = `https://${envConfig.AWS_BUCKET_NAME}.s3.${envConfig.AWS_REGION}.amazonaws.com/${s3Key}`;
     return url;
 };
+
+/**
+ * returns a presigned url for an S3 object.
+ * the url expires after `expiresInSecs` seconds, default is 1 hour.
+ */
+export const getSignedObjectUrlS3 = async (
+    s3Key: string,
+    expiresInSecs: number = secs("1h")
+): Promise<string> => {
+    return getSignedUrl(
+        flowS3Client,
+        new GetObjectCommand({
+            Bucket: envConfig.AWS_BUCKET_NAME,
+            Key: s3Key,
+        }),
+        {
+            expiresIn: expiresInSecs
+        }
+    )
+}

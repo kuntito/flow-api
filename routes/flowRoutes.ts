@@ -1,5 +1,5 @@
 import express from "express";
-import { getNextSong } from "./requestHandlers/getNextSong";
+import { getNextSong } from "./requestHandlers/getNextSong/getNextSong";
 import multer from "multer";
 import { uploadSong } from "./requestHandlers/uploadSong/uploadSong";
 

@@ -9,6 +9,7 @@ import {
 } from "../../../helpers/s3Helpers";
 import { SongInsertEntity, songsTable } from "../../../schema/song-schema";
 import { flowDb } from "../../../clients/neonDbClient";
+import { logDbError } from "../../../helpers/dbHelpers";
 
 type AlbumArtFromFile = {
     buffer: Buffer;
@@ -196,11 +197,10 @@ export const insertSongInDb = async (
         await flowDb.insert(songsTable).values(songEntity);
         return true;
     } catch (e) {
-        console.log(
-            `db insert failed, songsTable, errorMessage: ${
-                (e as Error).message
-            }`
-        );
+        logDbError(
+            "db insert failed, songsTable",
+            e,
+        )
 
         return false;
     }

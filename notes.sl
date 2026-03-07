@@ -171,3 +171,7 @@ export default defineConfig({
 
     where `filename.ts` is the filepath, 
     this assumes you've cd'd into the root dir for `filename.ts`.
+
++   converts time strings to milliseconds, allows me do ms("10s"):
+    `npm i ms@2.1.3`
+    `npm i -D @types/ms`, `-D` means it's only available in the development environment
