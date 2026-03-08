@@ -31,7 +31,11 @@ export const uploadFileToS3 = async (
     }
 };
 
-
+/**
+ * deletes a file from S3.
+ * 
+ * returns false if anything goes wrong.
+ */
 export const deleteFileFromS3 = async (s3Key: string): Promise<boolean> => {
     try {
         await flowS3Client.send(
@@ -87,3 +91,20 @@ export const getSignedObjectUrlS3 = async (
         }
     )
 }
+
+/**
+ * file urls on s3 are in the format: \
+ * "https://my-bucket.s3.us-east-1.amazonaws.com/myKey.mp3"
+ *
+ * the s3 key is everything after the `.com`.
+ * 
+ * fn returns the key or a null if something goes wrong.
+ */
+export const extractS3KeyFromFileUrl = (
+    albumArtS3Url: string
+): string | null => {
+    // this matches everything after the `.com`
+    const s3Regex = /\.com\/(.+)/i;
+    const match = albumArtS3Url.match(s3Regex);
+    return match?.[1] ?? null;
+};

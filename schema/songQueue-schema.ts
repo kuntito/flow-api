@@ -5,5 +5,9 @@ export const songQueueTable = pgTable("songQueue", {
     // the queue design hinges on the pos being an auto-incrementing integer
     // any modifications should account for this
     pos: serial("pos").primaryKey(),
-    songId: integer("songId").references(() => songsTable.songId),
+    songId: integer("songId")
+        .references(
+            () => songsTable.songId,
+            { onDelete: "cascade" },
+        ),
 })

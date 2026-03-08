@@ -12,6 +12,7 @@ export const nextSongTable = pgTable(
         posInQueue: integer("posInQueue")
             .primaryKey()
             .references(
-                () => songQueueTable.pos
+                () => songQueueTable.pos,
+                { onDelete: "cascade" },
             ),
 });

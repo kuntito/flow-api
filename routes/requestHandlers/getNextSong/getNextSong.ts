@@ -1,16 +1,16 @@
 import { Request, RequestHandler, Response } from "express";
 import { getIdNextSong } from "./getNextSongHelpers";
 import { getSignedObjectUrlS3 as getSignedUrlS3 } from "../../../helpers/s3Helpers";
-import { getSongFromDb } from "../../../helpers/songDbHelpers";
+import { safeGetSongFromDb } from "../../../helpers/songDbHelpers";
 
 type SongWithUrl = {
-    id: number,
-    title: string,
-    artist: string,
-    durationMillis: number,
-    albumArtUrl: string,
-    songUrl: string,
-}
+    id: number;
+    title: string;
+    artist: string;
+    durationMillis: number;
+    albumArtUrl: string;
+    songUrl: string;
+};
 
 type GetNextSongResponse = {
     success: true;
@@ -40,7 +40,7 @@ const getNextSong: RequestHandler = async (
 
     
     // fetch song from db..
-    const songEntity = await getSongFromDb(idNextSong);
+    const songEntity = await safeGetSongFromDb(idNextSong);
     if (songEntity == null) {
         return res
             .status(500)

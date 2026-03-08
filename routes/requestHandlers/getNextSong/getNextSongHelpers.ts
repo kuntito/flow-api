@@ -117,6 +117,8 @@ const isDbTableEmpty = async (
 /**
  * grabs the position of the first song in the queue.
  * 
+ * if queue is empty, triggers queue population.
+ * 
  * returns `null` if something goes wrong.
  */
 const getFirstQueuePos = async (
