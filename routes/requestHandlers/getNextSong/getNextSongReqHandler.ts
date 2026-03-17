@@ -2,8 +2,8 @@ import { Request, RequestHandler, Response } from "express";
 import { getIdNextSong } from "./getNextSongHelpers";
 import { getSignedObjectUrlS3 as getSignedUrlS3 } from "../../../helpers/s3Helpers";
 import { safeGetSongFromDb } from "../../../helpers/songDbHelpers";
+import { SongEntity } from "../../../schema/song-schema";
 
-// TODO move elsewhere?
 export type SongWithUrl = {
     id: number;
     title: string;
@@ -12,6 +12,18 @@ export type SongWithUrl = {
     albumArtUrl: string;
     songUrl: string;
 };
+
+const toSongWithUrl = (
+    songEntity: SongEntity,
+    songUrl: string,
+): SongWithUrl => ({
+    id: songEntity.songId,
+    title: songEntity.songTitle,
+    artistStr: songEntity.songArtistName,
+    durationMillis: songEntity.songDurationMillis,
+    albumArtUrl: songEntity.songAlbumArtUrl,
+    songUrl: songUrl,
+});
 
 type GetNextSongResponse = {
     success: true;
@@ -55,14 +67,10 @@ const getNextSong: RequestHandler = async (
     
     const songUrl = await getSignedUrlS3(songEntity.songS3Key);
 
-    const songWithUrl: SongWithUrl = {
-        id: songEntity.songId,
-        title: songEntity.songTitle,
-        artistStr: songEntity.songArtistName,
-        durationMillis: songEntity.songDurationMillis,
-        albumArtUrl: songEntity.songAlbumArtUrl,
-        songUrl: songUrl,
-    }
+    const songWithUrl: SongWithUrl = toSongWithUrl(
+        songEntity,
+        songUrl,
+    );
 
     return res
         .status(200)

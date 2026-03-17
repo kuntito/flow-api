@@ -3,6 +3,7 @@ import { getNextSong as getNextSongReqHandler } from "./requestHandlers/getNextS
 import multer from "multer";
 import { uploadSong as uploadSongReqHandler } from "./requestHandlers/uploadSong/uploadSongReqHandler";
 import { deleteSong as deleteSongReqHandler } from "./requestHandlers/deleteSong/deleteSong";
+import { searchSongsReqHandler } from "./requestHandlers/searchSongs/searchSongsReqHandler";
 
 const flowRouter = express.Router();
 
@@ -16,5 +17,7 @@ flowRouter.post(
 );
 
 flowRouter.delete('/:songId', deleteSongReqHandler);
+
+flowRouter.get('/search', searchSongsReqHandler);
 
 export default flowRouter;
