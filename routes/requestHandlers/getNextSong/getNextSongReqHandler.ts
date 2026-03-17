@@ -3,7 +3,8 @@ import { getIdNextSong } from "./getNextSongHelpers";
 import { getSignedObjectUrlS3 as getSignedUrlS3 } from "../../../helpers/s3Helpers";
 import { safeGetSongFromDb } from "../../../helpers/songDbHelpers";
 
-type SongWithUrl = {
+// TODO move elsewhere?
+export type SongWithUrl = {
     id: number;
     title: string;
     artistStr: string;

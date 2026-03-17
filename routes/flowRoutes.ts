@@ -1,20 +1,20 @@
 import express from "express";
-import { getNextSong } from "./requestHandlers/getNextSong/getNextSong";
+import { getNextSong as getNextSongReqHandler } from "./requestHandlers/getNextSong/getNextSongReqHandler";
 import multer from "multer";
-import { uploadSong } from "./requestHandlers/uploadSong/uploadSong";
-import { deleteSong } from "./requestHandlers/deleteSong/deleteSong";
+import { uploadSong as uploadSongReqHandler } from "./requestHandlers/uploadSong/uploadSongReqHandler";
+import { deleteSong as deleteSongReqHandler } from "./requestHandlers/deleteSong/deleteSong";
 
 const flowRouter = express.Router();
 
-flowRouter.get("/next-song", getNextSong);
+flowRouter.get("/next-song", getNextSongReqHandler);
 
 const fileUploadMiddleware = multer({ dest: 'temp-uploads/'});
 flowRouter.post(
     "/song",
     fileUploadMiddleware.single("audio"),
-    uploadSong
+    uploadSongReqHandler
 );
 
-flowRouter.delete('/:songId', deleteSong);
+flowRouter.delete('/:songId', deleteSongReqHandler);
 
 export default flowRouter;
