@@ -6,7 +6,7 @@ import { safeGetSongFromDb } from "../../../helpers/songDbHelpers";
 type SongWithUrl = {
     id: number;
     title: string;
-    artist: string;
+    artistStr: string;
     durationMillis: number;
     albumArtUrl: string;
     songUrl: string;
@@ -57,7 +57,7 @@ const getNextSong: RequestHandler = async (
     const songWithUrl: SongWithUrl = {
         id: songEntity.songId,
         title: songEntity.songTitle,
-        artist: songEntity.songArtistName,
+        artistStr: songEntity.songArtistName,
         durationMillis: songEntity.songDurationMillis,
         albumArtUrl: songEntity.songAlbumArtUrl,
         songUrl: songUrl,

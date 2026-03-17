@@ -175,3 +175,14 @@ export default defineConfig({
 +   converts time strings to milliseconds, allows me do ms("10s"):
     `npm i ms@2.1.3`
     `npm i -D @types/ms`, `-D` means it's only available in the development environment
+
++   make dev URL public
+    *   install `ngrok`, i had it installed but Claude says
+        `npm install -g ngrok` would work
+
+    *   start the server i.e. `npm run dev`
+        say it starts with: `http://localhost:5000`
+
+    *   spin up a new terminal, run:
+        `ngrok http 5000`
+
