@@ -8,7 +8,8 @@ import {
     safeGetSongFromDb,
 } from "../../../helpers/songDbHelpers";
 import { SongEntity } from "../../../schema/song-schema";
-import { handleDeleteSong, isSongIdValid } from "./deleteSongHelpers";
+import { handleDeleteSong } from "./deleteSongHelpers";
+import { isSongIdValid } from "../helpers";
 
 type DeleteSongResponse =
     | {

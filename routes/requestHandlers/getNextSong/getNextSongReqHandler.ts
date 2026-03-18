@@ -1,6 +1,6 @@
 import { Request, RequestHandler, Response } from "express";
 import { getIdNextSong } from "./getNextSongHelpers";
-import { getSignedObjectUrlS3 as getSignedUrlS3 } from "../../../helpers/s3Helpers";
+import { getSignedObjectUrlS3 } from "../../../helpers/s3Helpers";
 import { safeGetSongFromDb } from "../../../helpers/songDbHelpers";
 import { SongWithUrl, toSongWithUrl } from "../types";
 
@@ -33,6 +33,7 @@ const getNextSongReqHandler: RequestHandler = async (
             })
     }
 
+    // TODO can i replace the following with the `getSongReqHandler`??
     
     // fetch song from db..
     const songEntity = await safeGetSongFromDb(idNextSong);
@@ -47,7 +48,7 @@ const getNextSongReqHandler: RequestHandler = async (
             })
     }
     
-    const songUrl = await getSignedUrlS3(songEntity.songS3Key);
+    const songUrl = await getSignedObjectUrlS3(songEntity.songS3Key);
 
     const songWithUrl: SongWithUrl = toSongWithUrl(
         songEntity,

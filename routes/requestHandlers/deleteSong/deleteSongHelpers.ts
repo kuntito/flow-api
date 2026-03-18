@@ -5,22 +5,6 @@ import { nextSongTable } from "../../../schema/nextSong-schema";
 import { songQueueTable } from "../../../schema/songQueue-schema";
 import { eq, gt } from "drizzle-orm";
 
-/**
- * `songId` is extracted from the URL.
- * it is a string.
- *
- * fn determines if `songId` is a non-negative integer.
- */
-export const isSongIdValid = (songId: string | undefined): boolean => {
-    if (!songId) return false;
-
-    for (const ch of songId) {
-        if (ch < "0" || ch > "9") return false;
-    }
-
-    return true;
-};
-
 
 /**
  * deletes song from db,
