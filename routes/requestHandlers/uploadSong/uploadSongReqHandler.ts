@@ -39,7 +39,7 @@ type UploadSongResponse =
  * 
  * the multer download file is cleaned up at the end.
  */
-const uploadSong: RequestHandler = async (
+const uploadSongReqHandler: RequestHandler = async (
     req: Request,
     res: Response<UploadSongResponse>
 ) => {
@@ -134,4 +134,4 @@ const uploadSong: RequestHandler = async (
     }
 };
 
-export { uploadSong };
+export { uploadSongReqHandler };

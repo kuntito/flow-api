@@ -1,8 +1,8 @@
 import express from "express";
-import { getNextSong as getNextSongReqHandler } from "./requestHandlers/getNextSong/getNextSongReqHandler";
+import { getNextSongReqHandler } from "./requestHandlers/getNextSong/getNextSongReqHandler";
 import multer from "multer";
-import { uploadSong as uploadSongReqHandler } from "./requestHandlers/uploadSong/uploadSongReqHandler";
-import { deleteSong as deleteSongReqHandler } from "./requestHandlers/deleteSong/deleteSong";
+import { uploadSongReqHandler } from "./requestHandlers/uploadSong/uploadSongReqHandler";
+import { deleteSongReqHandler } from "./requestHandlers/deleteSong/deleteSongReqHandler";
 import { searchSongsReqHandler } from "./requestHandlers/searchSongs/searchSongsReqHandler";
 
 const flowRouter = express.Router();

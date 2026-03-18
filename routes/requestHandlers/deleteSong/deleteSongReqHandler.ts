@@ -36,7 +36,7 @@ type DeleteSongResponse =
  * 
  * file deletions from S3 may fail.
  */
-const deleteSong: RequestHandler = async (
+const deleteSongReqHandler: RequestHandler = async (
     req: Request,
     res: Response<DeleteSongResponse>
 ) => {
@@ -102,4 +102,4 @@ const deleteSong: RequestHandler = async (
     }
 };
 
-export { deleteSong };
+export { deleteSongReqHandler };

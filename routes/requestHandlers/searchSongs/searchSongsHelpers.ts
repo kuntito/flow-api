@@ -12,6 +12,7 @@ export const searchDbForSongs = async (
 ): Promise<SongEntity[]> => {
     try {
         // TODO implement subsequence search.
+        // TODO handle trimming
         const songSearchResults = await flowDb
             .select()
             .from(songsTable)

@@ -2,28 +2,8 @@ import { Request, RequestHandler, Response } from "express";
 import { getIdNextSong } from "./getNextSongHelpers";
 import { getSignedObjectUrlS3 as getSignedUrlS3 } from "../../../helpers/s3Helpers";
 import { safeGetSongFromDb } from "../../../helpers/songDbHelpers";
-import { SongEntity } from "../../../schema/song-schema";
+import { SongWithUrl, toSongWithUrl } from "../types";
 
-export type SongWithUrl = {
-    id: number;
-    title: string;
-    artistStr: string;
-    durationMillis: number;
-    albumArtUrl: string;
-    songUrl: string;
-};
-
-const toSongWithUrl = (
-    songEntity: SongEntity,
-    songUrl: string,
-): SongWithUrl => ({
-    id: songEntity.songId,
-    title: songEntity.songTitle,
-    artistStr: songEntity.songArtistName,
-    durationMillis: songEntity.songDurationMillis,
-    albumArtUrl: songEntity.songAlbumArtUrl,
-    songUrl: songUrl,
-});
 
 type GetNextSongResponse = {
     success: true;
@@ -33,10 +13,12 @@ type GetNextSongResponse = {
     debug: object;
 }
 
+// TODO getNextSong should be based on recency.
+// always get the least recently played song.
 /**
  * fetches the next song in the queue.
  */
-const getNextSong: RequestHandler = async (
+const getNextSongReqHandler: RequestHandler = async (
     req: Request,
     res: Response<GetNextSongResponse>,
 ) => {
@@ -80,4 +62,4 @@ const getNextSong: RequestHandler = async (
         });
 }
 
-export { getNextSong };
+export { getNextSongReqHandler };
