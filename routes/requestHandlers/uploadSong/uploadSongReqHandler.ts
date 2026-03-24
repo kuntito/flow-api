@@ -15,6 +15,7 @@ import { deleteFileFromS3 } from "../../../helpers/s3Helpers";
 type UploadSongResponse =
     | {
           success: true;
+          songFileName: string;
       }
     | {
           success: false;
@@ -79,6 +80,8 @@ const uploadSongReqHandler: RequestHandler = async (
             songFileExt,
             songFileMimeType,
         );
+
+        const songFileName = `${songFileStem}${songFileExt}`
         if (!songS3Key) {
             return res
                 .status(500)
@@ -86,7 +89,7 @@ const uploadSongReqHandler: RequestHandler = async (
                     success: false,
                     clientErrorMessage: "error occurred",
                     debug: {
-                        errorMessage: `s3 upload failed for ${songFileStem}${songFileExt}`
+                        errorMessage: `s3 upload failed for ${songFileName}`
                     }
                 });
         }
@@ -127,7 +130,8 @@ const uploadSongReqHandler: RequestHandler = async (
         return res
             .status(201)
             .json({
-                success: true
+                success: true,
+                songFileName: `${songFileName}`
             });
     } finally {
         await deleteUploadedFile(uploadedSongFp);
