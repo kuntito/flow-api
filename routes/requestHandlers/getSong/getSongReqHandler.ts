@@ -3,6 +3,7 @@ import { SongWithUrl, toSongWithUrl } from "../types";
 import { isSongIdValid } from "../helpers";
 import { safeGetSongFromDb } from "../../../helpers/songDbHelpers";
 import { getSignedObjectUrlS3 } from "../../../helpers/s3Helpers";
+import { prepareSongForClient } from "../../../helpers/miscHelpers";
 
 type GetSongResponse = {
     success: true;
@@ -54,12 +55,9 @@ const getSongReqHandler: RequestHandler = async (
             })
     }
 
-    const songUrl = await getSignedObjectUrlS3(songEntity.songS3Key);
-
-    const songWithUrl: SongWithUrl = toSongWithUrl(
-        songEntity,
-        songUrl,
-    );
+    const songWithUrl: SongWithUrl = await prepareSongForClient(
+        songEntity
+    )
 
     return res
         .status(200)

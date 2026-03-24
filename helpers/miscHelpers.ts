@@ -1,4 +1,10 @@
 import ms from "ms";
+import { SongEntity, songsTable } from "../schema/song-schema";
+import { SongWithUrl, toSongWithUrl } from "../routes/requestHandlers/types";
+import { getSignedObjectUrlS3 } from "./s3Helpers";
+import { flowDb } from "../clients/neonDbClient";
+import { eq } from "drizzle-orm";
+import { logDbError } from "./dbHelpers";
 
 /**
  * an abstraction over the `ms` npm package,.
@@ -32,3 +38,43 @@ export const shuffleArray = (array: any[]) => {
         ];
     }
 };
+
+/**
+ * updates the song's recency to now.
+ * used to track which song was last accessed.
+ */
+const updateSongRecency = async (
+    songId: number
+) => {
+    try {
+        await flowDb
+            .update(songsTable)
+            .set({ recency: Date.now() })
+            .where(eq(songsTable.songId, songId));
+    } catch (e) {
+        logDbError(
+            `couldn't update recency, songId: ${songId}`,
+            e
+        )
+    }
+}
+
+/**
+ * updates recency and converts to client response model.
+ * 
+ * @param songEntity - the song to process
+ */
+export const prepareSongForClient = async (
+    songEntity: SongEntity
+): Promise<SongWithUrl> => {
+    updateSongRecency(songEntity.songId);
+
+    const songUrl = await getSignedObjectUrlS3(songEntity.songS3Key);
+
+    const songWithUrl: SongWithUrl = toSongWithUrl(
+        songEntity,
+        songUrl,
+    );
+    
+    return songWithUrl;
+}

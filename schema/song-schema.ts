@@ -1,4 +1,4 @@
-import { pgTable, integer, serial, text } from "drizzle-orm/pg-core";
+import { pgTable, integer, serial, text, bigint } from "drizzle-orm/pg-core";
 
 // TODO make table name a variable `songsTN`
 export const songsTable = pgTable("songs", {
@@ -8,6 +8,7 @@ export const songsTable = pgTable("songs", {
     songArtistName: text("artist").notNull(),
     songAlbumArtUrl: text("albumArtUrl").notNull(),
     songDurationMillis: integer("durationMillis").notNull(),
+    recency: bigint("recency", { mode: "number" }).notNull().default(0),
 });
 
 export type SongEntity = typeof songsTable.$inferSelect; 

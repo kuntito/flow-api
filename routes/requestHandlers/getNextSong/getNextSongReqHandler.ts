@@ -1,8 +1,9 @@
 import { Request, RequestHandler, Response } from "express";
-import { getIdNextSong } from "./getNextSongHelpers";
+import { getLeastRecentSong } from "./getNextSongHelpers";
 import { getSignedObjectUrlS3 } from "../../../helpers/s3Helpers";
 import { safeGetSongFromDb } from "../../../helpers/songDbHelpers";
 import { SongWithUrl, toSongWithUrl } from "../types";
+import { prepareSongForClient } from "../../../helpers/miscHelpers";
 
 
 type GetNextSongResponse = {
@@ -13,30 +14,19 @@ type GetNextSongResponse = {
     debug: object;
 }
 
-// TODO getNextSong should be based on recency.
-// always get the least recently played song.
+
 /**
- * fetches the next song in the queue.
+ * next song is determined by recency.
+ * 
+ * fn returns the least recently accessed song.
+ * recency is updated on every song fetch.
  */
 const getNextSongReqHandler: RequestHandler = async (
     req: Request,
     res: Response<GetNextSongResponse>,
 ) => {
-    const idNextSong = await getIdNextSong();
-    if (idNextSong == null) {
-        return res.status(500)
-            .json({
-                success: false,
-                debug: {
-                    errorMessage: "couldn't get id of next song"
-                }
-            })
-    }
-
-    // TODO can i replace the following with the `getSongReqHandler`??
-    
     // fetch song from db..
-    const songEntity = await safeGetSongFromDb(idNextSong);
+    const songEntity = await getLeastRecentSong();
     if (songEntity == null) {
         return res
             .status(500)
@@ -47,13 +37,8 @@ const getNextSongReqHandler: RequestHandler = async (
                 }
             })
     }
-    
-    const songUrl = await getSignedObjectUrlS3(songEntity.songS3Key);
 
-    const songWithUrl: SongWithUrl = toSongWithUrl(
-        songEntity,
-        songUrl,
-    );
+    const songWithUrl: SongWithUrl = await prepareSongForClient(songEntity);
 
     return res
         .status(200)
