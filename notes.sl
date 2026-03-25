@@ -186,3 +186,38 @@ export default defineConfig({
     *   spin up a new terminal, run:
         `ngrok http 5000`
 
+** DEPLOYING ON RENDER **
++   in `tsconfig.json`, add:
+    `
+    {
+        "compilerOptions": {
+            ...,
+            "outDir": "./dist",
+            ...,
+        }
+    }
+    `
+
++   in `package.json`
+    under the "scripts" tag add:
+    `    
+    "build": "tsc",
+    "start": "node dist/server.js"
+    `
+
++   render setup:
+    
+    1. Go to https://render.com and sign up (use GitHub)
+    2. Click New → Web Service
+    3. Connect your GitHub repo
+    4. set Language to Node
+    5. Configure:
+        - Build Command: `npm install && npm run build`
+        - Start Command: `npm start`
+    6. Add your environment variables (click Environment):
+    7. Click Create Web Service
+
+    Render will build and deploy.
+    
+    you'll get a URL like https://is-api-xxxx.onrender.
+    

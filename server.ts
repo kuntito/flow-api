@@ -3,7 +3,7 @@ import express, { Express } from "express";
 import flowRouter from "./routes/flowRoutes";
 
 const app: Express = express();
-const PORT = 5003;
+const PORT = process.env.PORT || 5003;
 
 // allows project to parse JSON in request body
 app.use(express.json());
