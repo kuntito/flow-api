@@ -25,6 +25,17 @@ const getNextSongReqHandler: RequestHandler = async (
     req: Request,
     res: Response<GetNextSongResponse>,
 ) => {
+    // client side, sometimes, responses are cached.
+    // it saves the API extra work.
+
+    // however, it causes a problem with this route
+    // since it's designed to return the least recently played song
+    // on each call.
+
+    // caching the result would not be the best practice.
+    // so, this header tells the HTTP client, to not cache this route.
+    res.setHeader('Cache-Control', 'no-store');
+
     // fetch song from db..
     const songEntity = await getLeastRecentSong();
     if (songEntity == null) {
