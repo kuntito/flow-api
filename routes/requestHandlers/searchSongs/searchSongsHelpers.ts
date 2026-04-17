@@ -1,4 +1,4 @@
-import { ilike } from "drizzle-orm";
+import { ilike, or } from "drizzle-orm";
 import { flowDb } from "../../../clients/neonDbClient";
 import { logDbError } from "../../../helpers/dbHelpers";
 import { SongEntity, songsTable } from "../../../schema/song-schema";
@@ -17,7 +17,10 @@ export const searchDbForSongs = async (
             .select()
             .from(songsTable)
             .where(
-                ilike(songsTable.songTitle, `%${query}%`)
+                or(
+                    ilike(songsTable.songTitle, `%${query}%`),
+                    ilike(songsTable.songArtistName, `%${query}%`)
+                )
             );
 
         return songSearchResults;
