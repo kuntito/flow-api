@@ -11,5 +11,7 @@ export const songsTable = pgTable("songs", {
     recency: bigint("recency", { mode: "number" }).notNull().default(0),
 });
 
-export type SongEntity = typeof songsTable.$inferSelect; 
+export type SongEntity = typeof songsTable.$inferSelect;
+
+// contains all fields except the optional ones i.e. `songId`, `recency`
 export type SongInsertEntity = typeof songsTable.$inferInsert;

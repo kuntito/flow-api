@@ -1,8 +1,8 @@
 import { sql } from "drizzle-orm";
 import { pgTable, text, check } from "drizzle-orm/pg-core";
 
-export const tagTypesTN = "tag_types"
-export const tagTypesTable = pgTable(tagTypesTN, {
+export const songTagTypesTN = "songTagTypes"
+export const songTagTypesTable = pgTable(songTagTypesTN, {
     tagName: text("name").primaryKey(),
     tagDescription: text("description").notNull()
 }, (table) => ([
@@ -11,3 +11,5 @@ export const tagTypesTable = pgTable(tagTypesTN, {
         sql`trim(${table.tagDescription}) <> ''`
     ),
 ]));
+
+export type SongTagEntity = typeof songTagTypesTable.$inferSelect;
