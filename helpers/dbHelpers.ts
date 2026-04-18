@@ -22,3 +22,13 @@ export const logDbError = (message: string, e: unknown) => {
 
     console.log(constructedMessage);
 }
+
+/**
+ * postgres error code for unique constraint violation.
+ * happens when inserting a duplicate value into a unique column.
+ */
+const PG_UNIQUE_VIOLATION_CODE = '23505';
+
+export const isPgUniqueViolation = (e: any): boolean => {
+    return e?.cause?.code === PG_UNIQUE_VIOLATION_CODE;
+};

@@ -5,6 +5,7 @@ import { uploadSongReqHandler } from "./requestHandlers/uploadSong/uploadSongReq
 import { deleteSongReqHandler } from "./requestHandlers/deleteSong/deleteSongReqHandler";
 import { searchSongsReqHandler } from "./requestHandlers/searchSongs/searchSongsReqHandler";
 import { getSongReqHandler } from "./requestHandlers/getSong/getSongReqHandler";
+import { addSongTagReqHandler } from "./requestHandlers/addSongTag/addSongTagReqHandler";
 
 const flowRouter = express.Router();
 
@@ -27,5 +28,7 @@ flowRouter.get('/song/:songIdStr', getSongReqHandler);
 // i've defined this route that does nothing so a robot can keep the API live
 // by hitting this route before the host spins down.
 flowRouter.get('/dummy', (req, res) => res.send('ok'));
+
+flowRouter.post('/song-tag', addSongTagReqHandler);
 
 export default flowRouter;
