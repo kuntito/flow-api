@@ -6,6 +6,7 @@ import { deleteSongReqHandler } from "./requestHandlers/deleteSong/deleteSongReq
 import { searchSongsReqHandler } from "./requestHandlers/searchSongs/searchSongsReqHandler";
 import { getSongReqHandler } from "./requestHandlers/getSong/getSongReqHandler";
 import { addSongTagReqHandler } from "./requestHandlers/addSongTag/addSongTagReqHandler";
+import { addTagToSongReqHandler } from "./requestHandlers/addTagToSong/addTagToSongReqHandler";
 
 const flowRouter = express.Router();
 
@@ -30,5 +31,7 @@ flowRouter.get('/song/:songIdStr', getSongReqHandler);
 flowRouter.get('/dummy', (req, res) => res.send('ok'));
 
 flowRouter.post('/song-tag', addSongTagReqHandler);
+
+flowRouter.post('/song/:songIdStr/tag', addTagToSongReqHandler);
 
 export default flowRouter;

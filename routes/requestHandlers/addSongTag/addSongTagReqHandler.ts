@@ -36,6 +36,7 @@ const addSongTagReqHandler: RequestHandler = async (
             });
     }
 
+
     const tagDescriptionValidationRes = validateTagDescription(tagDescription);
     if (!tagDescriptionValidationRes.isValid) {
         return res
@@ -46,11 +47,13 @@ const addSongTagReqHandler: RequestHandler = async (
             });
     };
 
+
     const songTagEntity: SongTagEntity = {
         tagName: tagNameValidationRes.validatedTagName,
         tagDescription: tagDescriptionValidationRes.validatedTagDescription,
     };
 
+    
     const songTagAddRes = await addSongTagToDb(songTagEntity);
     if(songTagAddRes.success) {
         return res
