@@ -1,6 +1,7 @@
 import { RequestHandler, Request, Response } from "express";
-import { SongWithUrl, toSongWithUrl } from "../types";
-import { isSongIdValid } from "../helpers";
+import { toSongWithUrl } from "../../types/SongWithUrl";
+import { SongWithUrl } from "../../types/SongWithUrl";
+import { isSongIdValid } from "../../helpers";
 import { safeGetSongFromDb } from "../../../helpers/songDbHelpers";
 import { getSignedObjectUrlS3 } from "../../../helpers/s3Helpers";
 import { prepareSongForClient } from "../../../helpers/miscHelpers";

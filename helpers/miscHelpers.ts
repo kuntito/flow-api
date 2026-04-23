@@ -1,6 +1,7 @@
 import ms from "ms";
 import { SongEntity, songsTable } from "../schema/song-schema";
-import { SongWithUrl, toSongWithUrl } from "../routes/requestHandlers/types";
+import { toSongWithUrl } from "../routes/types/SongWithUrl";
+import { SongWithUrl } from "../routes/types/SongWithUrl";
 import { getSignedObjectUrlS3 } from "./s3Helpers";
 import { flowDb } from "../clients/neonDbClient";
 import { eq } from "drizzle-orm";

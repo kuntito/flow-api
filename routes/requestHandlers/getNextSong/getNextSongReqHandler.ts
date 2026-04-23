@@ -2,7 +2,8 @@ import { Request, RequestHandler, Response } from "express";
 import { getLeastRecentSong } from "./getNextSongHelpers";
 import { getSignedObjectUrlS3 } from "../../../helpers/s3Helpers";
 import { safeGetSongFromDb } from "../../../helpers/songDbHelpers";
-import { SongWithUrl, toSongWithUrl } from "../types";
+import { toSongWithUrl } from "../../types/SongWithUrl";
+import { SongWithUrl } from "../../types/SongWithUrl";
 import { prepareSongForClient } from "../../../helpers/miscHelpers";
 
 

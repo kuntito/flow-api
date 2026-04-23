@@ -11,7 +11,7 @@ export type SongWithUrl = {
 
 export const toSongWithUrl = (
     songEntity: SongEntity,
-    songUrl: string,
+    songUrl: string
 ): SongWithUrl => ({
     id: songEntity.songId,
     title: songEntity.songTitle,
@@ -20,3 +20,4 @@ export const toSongWithUrl = (
     albumArtUrl: songEntity.songAlbumArtUrl,
     songUrl: songUrl,
 });
+

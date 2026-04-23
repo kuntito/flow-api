@@ -9,7 +9,7 @@ import {
 } from "../../../helpers/songDbHelpers";
 import { SongEntity } from "../../../schema/song-schema";
 import { handleDeleteSong } from "./deleteSongHelpers";
-import { isSongIdValid } from "../helpers";
+import { isSongIdValid } from "../../helpers";
 
 type DeleteSongResponse =
     | {
