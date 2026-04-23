@@ -4,6 +4,35 @@ import { logDbError } from "../../../helpers/dbHelpers";
 import { SongEntity, songsTable } from "../../../schema/song-schema";
 
 
+type ValidateSearchQueryReturn = 
+    | { success: true; validatedQuery: string }
+    | { success: false; reason: string; };
+
+export const validateSearchQuery = (
+    query: string
+): ValidateSearchQueryReturn => {
+
+    if (query === undefined) {
+        return {
+            success: false,
+            reason: "search query is required",
+        };
+    }
+
+    const trimmedQuery = query.trim();
+    if (trimmedQuery === '') {
+        return {
+            success: false,
+            reason: "search query cannot be blank"
+        }
+    };
+
+    return {
+        success: true,
+        validatedQuery: trimmedQuery
+    }
+}
+
 /**
  * searches db for songs where query is in song title
  */
@@ -12,7 +41,6 @@ export const searchDbForSongs = async (
 ): Promise<SongEntity[]> => {
     try {
         // TODO implement subsequence search.
-        // TODO handle trimming
         const songSearchResults = await flowDb
             .select()
             .from(songsTable)

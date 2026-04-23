@@ -1,5 +1,5 @@
 import { RequestHandler } from "express";
-import { searchDbForSongs } from "./searchSongsHelpers";
+import { searchDbForSongs, validateSearchQuery } from "./searchSongsHelpers";
 import { SongEntity } from "../../../schema/song-schema";
 
 type SongSearchItem = {
@@ -18,8 +18,10 @@ const toSongSearchItem = (
     albumArtUrl: songEntity.songAlbumArtUrl,
 })
 
+
 type SearchSongsResponse = {
     success: true;
+    itemCount: number;
     searchResults: SongSearchItem[];
 } | {
     success: false;
@@ -33,37 +35,34 @@ const searchSongsReqHandler: RequestHandler<
     { q: string }
 >= async (req, res) => {
 
-    const query = req.query.q;
-    if (query === undefined) {
+    const rawQuery = req.query.q;
+    const validateRes = validateSearchQuery(rawQuery);
+
+    if (!validateRes.success) {
         return res
             .status(400)
             .json({
                 success: false,
                 debug: {
-                    message: "search query is undefined."
+                    message: validateRes.reason
                 }
             });
     }
 
-    if (typeof query !== 'string') {
-        return res
-            .status(400)
-            .json({
-                success: false,
-                debug: {
-                    message: "search query is not a string"
-                }
-            });
-    }
-
+    const searchQuery = validateRes.validatedQuery;
+    console.log(searchQuery);
+    
     const songSearchResults = (
-        await searchDbForSongs(query)
+        await searchDbForSongs(
+            searchQuery
+        )
     ).map(toSongSearchItem);
 
     return res
         .status(200)
         .json({
             success: true,
+            itemCount: songSearchResults.length,
             searchResults: songSearchResults,
         })
 
