@@ -15,6 +15,7 @@
   "dependencies": {
     "@aws-sdk/client-s3": "^3.1000.0",
     "@aws-sdk/s3-request-presigner": "^3.1000.0",
+    "cors": "^2.8.6",
     "dotenv": "^17.3.1",
     "drizzle-orm": "^0.45.1",
     "express": "^5.2.1",
@@ -25,6 +26,7 @@
     "typescript": "^5.9.3"
   },
   "devDependencies": {
+    "@types/cors": "^2.8.19",
     "@types/express": "^5.0.6",
     "@types/ms": "^2.1.0",
     "@types/multer": "^2.0.0",

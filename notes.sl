@@ -186,6 +186,11 @@ export default defineConfig({
     *   spin up a new terminal, run:
         `ngrok http 5000`
 
++   enables cross-origin requests, allows you specify what hosts can access this API:
+    `npm install cors`
+    `npm install -D @types/cors`
+    
+
 ** DEPLOYING ON RENDER **
 +   in `tsconfig.json`, add:
     `
