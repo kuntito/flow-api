@@ -2,7 +2,7 @@ import { Request, Response, RequestHandler } from "express";
 import { addTagToSongInDb, doesSongExist, doesSongTagExist } from "./addTagToSongHelpers";
 import { SongAndTagEntity } from "../../../schema/songAndTag-schema";
 
-type AddTagToSongResponse = 
+export type AddTagToSongResponse = 
     | {
         success: true
     }

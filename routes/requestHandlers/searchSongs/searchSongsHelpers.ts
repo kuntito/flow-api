@@ -55,6 +55,8 @@ export const searchDbForSongs = async (
 
     } catch (e) {
         logDbError("search query failed", e);
+        // TODO you want to return an error, not empty list.
+        // the empty list hides any errors that occur.
         return [];
     }
 }
