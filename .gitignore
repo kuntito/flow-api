@@ -3,3 +3,4 @@ node_modules
 .cursorrules
 .vscode/settings.json
 tg.ts
+backup.sql

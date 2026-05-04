@@ -118,6 +118,26 @@ app.listen(PORT, () => {
 
     you define the schema once, drizzle infers the types.
 
++   to backup every table in neon
+
+    ensure postgres is installed
+    i installed from https://www.enterprisedb.com/downloads/postgres-postgresql-downloads
+
+    add this or it's equivalent to PATH:
+    `C:\Program Files\PostgreSQL\18\bin`
+
+    restart terminal, might need to close all VS code instances
+
+    then..
+
+    in terminal, run `pg_dump "your_neon_connection_string" > backup.sql`
+
+    where "your_neon_connection_string" is in the form, `postgresql://neondb_owner:npg_ERy4P...`
+
+    so, the full command is:
+    `pg_dump "postgresql://neondb_owner:npg_ERy4P..." > backup.sql`
+    
+
 ** DRIZZLE ORM **
 +   `npm install drizzle-orm`
     `npm install -D drizzle-kit`

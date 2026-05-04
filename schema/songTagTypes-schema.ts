@@ -1,9 +1,10 @@
 import { sql } from "drizzle-orm";
-import { pgTable, text, check } from "drizzle-orm/pg-core";
+import { pgTable, text, check, serial } from "drizzle-orm/pg-core";
 
 export const songTagTypesTN = "songTagTypes"
 export const songTagTypesTable = pgTable(songTagTypesTN, {
-    tagName: text("name").primaryKey(),
+    tagId: serial("id").primaryKey(),
+    tagName: text("name").unique(),
     tagDescription: text("description").notNull()
 }, (table) => ([
     check(

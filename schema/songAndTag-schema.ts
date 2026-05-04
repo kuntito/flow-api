@@ -7,13 +7,13 @@ export const songAndTagTable = pgTable(songsAndTagTN, {
     songId: integer("song_id")
         .notNull()
         .references(() => songsTable.songId),
-    tagName: text("tag_name")
+    tagId: integer("tag_id")
         .notNull()
-        .references(() => songTagTypesTable.tagName),
+        .references(() => songTagTypesTable.tagId),
 }, (table) => ([
     primaryKey({ columns: [
         table.songId,
-        table.tagName
+        table.tagId
     ]})
 ]));
 
