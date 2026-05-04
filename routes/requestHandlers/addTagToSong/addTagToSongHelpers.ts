@@ -6,7 +6,7 @@ import { songsTable } from "../../../schema/song-schema";
 import { SongAndTagEntity, songAndTagTable } from "../../../schema/songAndTag-schema";
 
 export const doesSongTagExist = async (
-    tagName: string
+    tagId: number
 ): Promise<boolean> => {
     try {
         const resultRows = await flowDb
@@ -14,8 +14,8 @@ export const doesSongTagExist = async (
             .from(songTagTypesTable)
             .where(
                 eq(
-                    songTagTypesTable.tagName,
-                    tagName
+                    songTagTypesTable.tagId,
+                    tagId
                 )
             )
             .limit(1);

@@ -1,6 +1,6 @@
 import { flowDb } from "../../../clients/neonDbClient";
 import { isPgUniqueViolation, logDbError } from "../../../helpers/dbHelpers";
-import { SongTagEntity, songTagTypesTable } from "../../../schema/songTagTypes-schema";
+import { SongTagInsertEntity, songTagTypesTable } from "../../../schema/songTagTypes-schema";
 
 type AddSongTagResult = 
     | { 
@@ -19,7 +19,7 @@ type AddSongTagResult =
     }
 
 export const addSongTagToDb = async (
-    songTagEntity: SongTagEntity
+    songTagEntity: SongTagInsertEntity
 ): Promise<AddSongTagResult> => {
     try {
         await flowDb

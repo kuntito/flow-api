@@ -1,5 +1,5 @@
-import { Request, Response, RequestHandler } from "express";
-import { SongTagEntity } from "../../../schema/songTagTypes-schema";
+import { Request, RequestHandler, Response } from "express";
+import { SongTagInsertEntity } from "../../../schema/songTagTypes-schema";
 import { addSongTagToDb, validateTagDescription, validateTagName } from "./addSongTagHelpers";
 
 type AddSongTagResponse = 
@@ -48,7 +48,7 @@ const addSongTagReqHandler: RequestHandler = async (
     };
 
 
-    const songTagEntity: SongTagEntity = {
+    const songTagEntity: SongTagInsertEntity = {
         tagName: tagNameValidationRes.validatedTagName,
         tagDescription: tagDescriptionValidationRes.validatedTagDescription,
     };

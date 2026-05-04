@@ -31,17 +31,28 @@ const addTagToSongReqHandler: RequestHandler = async (
             });
     }
 
-    const { tagName } = req.body;
+    const tagId = parseInt(req.body.tagId);
+
+    if (isNaN(tagId)) {
+        return res
+            .status(400)
+            .json({
+                success: false,
+                debug: {
+                    errorMessage: "tag id should be a number"
+                }
+            });
+    }
 
 
-    const isTagExist = await doesSongTagExist(tagName);
+    const isTagExist = await doesSongTagExist(tagId);
     if (!isTagExist) {
         return res
             .status(400)
             .json({
                 success: false,
                 debug: {
-                    errorMessage: `song tag, '${tagName}', does not exist`
+                    errorMessage: `song tag, '${tagId}', does not exist`
                 }
             })
     }
@@ -62,7 +73,7 @@ const addTagToSongReqHandler: RequestHandler = async (
 
     const songAndTagEntity: SongAndTagEntity = {
         songId: songId,
-        tagName: tagName,
+        tagId: tagId,
     }
     const isTagAddedSuccess = await addTagToSongInDb(songAndTagEntity);
 
