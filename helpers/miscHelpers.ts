@@ -60,6 +60,12 @@ const updateSongRecency = async (
     }
 }
 
+// TODO make this function return a different signature
+//  and make that signature, part of the API response
+//  for getNextSong and getSong
+//  this way, any handler that fetches a song, must call this function
+//  this is where recency is handled, fetch calls work without recency update
+//  but the entire system is based on recency.
 /**
  * updates recency and converts to client response model.
  * 
