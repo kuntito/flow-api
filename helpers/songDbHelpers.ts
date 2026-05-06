@@ -1,6 +1,6 @@
 import { flowDb } from "../clients/neonDbClient";
 import { SongEntity, songsTable } from "../schema/song-schema";
-import { eq } from "drizzle-orm";
+import { eq, sql } from "drizzle-orm";
 import { logDbError } from "./dbHelpers";
 
 /**
@@ -57,4 +57,19 @@ export const safeDeleteSongFromDb = async (
     }
 
     return isDeleted;
+};
+
+
+// TODO docstring
+export const getTotalSongCount = async (): Promise<number> => {
+    try {
+        const rows = await flowDb
+            .select({ count: sql<number>`count(*)` })
+            .from(songsTable);
+
+        return rows[0]?.count ?? 0;
+    } catch (e) {
+        logDbError("couldn't count songs", e);
+        return 0;
+    }
 };

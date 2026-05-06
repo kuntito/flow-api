@@ -9,6 +9,9 @@ export const songsTable = pgTable("songs", {
     songAlbumArtUrl: text("albumArtUrl").notNull(),
     songDurationMillis: integer("durationMillis").notNull(),
     recency: bigint("recency", { mode: "number" }).notNull().default(0),
+    listenCount: integer("listenCount")
+        .notNull()
+        .default(0),
 });
 
 export type SongEntity = typeof songsTable.$inferSelect;
