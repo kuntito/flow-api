@@ -6,6 +6,7 @@ import { getSignedObjectUrlS3 } from "./s3Helpers";
 import { flowDb } from "../clients/neonDbClient";
 import { eq } from "drizzle-orm";
 import { logDbError } from "./dbHelpers";
+import { songPlayLogTable } from "../schema/songPlayLog-schema";
 
 /**
  * an abstraction over the `ms` npm package,.
@@ -60,12 +61,20 @@ const updateSongRecency = async (
     }
 }
 
-// TODO make this function return a different signature
-//  and make that signature, part of the API response
-//  for getNextSong and getSong
-//  this way, any handler that fetches a song, must call this function
-//  this is where recency is handled, fetch calls work without recency update
-//  but the entire system is based on recency.
+const logSongRequest = async (songId: number): Promise<void> => {
+    try {
+        await flowDb
+            .insert(songPlayLogTable)
+            .values({ songId: songId });
+    } catch (e) {
+        logDbError(
+            "couldn't log song request", 
+            e
+        );
+    }
+};
+
+
 /**
  * updates recency and converts to client response model.
  * 
@@ -74,9 +83,10 @@ const updateSongRecency = async (
 export const prepareSongForClient = async (
     songEntity: SongEntity
 ): Promise<SongWithUrl> => {
-    updateSongRecency(songEntity.songId);
-
     const songUrl = await getSignedObjectUrlS3(songEntity.songS3Key);
+    
+    updateSongRecency(songEntity.songId);
+    await logSongRequest(songEntity.songId);
 
     const songWithUrl: SongWithUrl = toSongWithUrl(
         songEntity,
