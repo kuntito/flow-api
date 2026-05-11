@@ -19,7 +19,7 @@ export const getLeastRecentSong = async (
     const percent = getRandomPercent();
 
     let songEntity: SongEntity | null = null;
-    if (percent < 85) {
+    if (percent < 70) {
         songEntity = await getLrsTopListens();
     } else {
         songEntity = await getLrsLowerListens();
