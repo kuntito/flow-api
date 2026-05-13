@@ -95,3 +95,34 @@ export const prepareSongForClient = async (
     
     return songWithUrl;
 }
+
+
+type ValidateSearchQueryReturn = 
+    | { success: true; validatedQuery: string }
+    | { success: false; reason: string; };
+
+    
+export const validateSearchQuery = (
+    query: string
+): ValidateSearchQueryReturn => {
+
+    if (query === undefined) {
+        return {
+            success: false,
+            reason: "search query is required",
+        };
+    }
+
+    const trimmedQuery = query.trim();
+    if (trimmedQuery === '') {
+        return {
+            success: false,
+            reason: "search query cannot be blank"
+        }
+    };
+
+    return {
+        success: true,
+        validatedQuery: trimmedQuery
+    }
+}

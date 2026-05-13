@@ -1,6 +1,7 @@
 import { RequestHandler } from "express";
-import { searchDbForSongs, validateSearchQuery } from "./searchSongsHelpers";
+import { validateSearchQuery } from "../../../helpers/miscHelpers";
 import { SongEntity } from "../../../schema/song-schema";
+import { searchDbForSongs } from "./searchSongsHelpers";
 
 type SongSearchItem = {
     id: number;
@@ -50,20 +51,27 @@ const searchSongsReqHandler: RequestHandler<
     }
 
     const searchQuery = validateRes.validatedQuery;
-    console.log(searchQuery);
+
+    const songSearchResults = await searchDbForSongs(searchQuery);
+    if (songSearchResults == null) {
+        return res
+            .status(500)
+            .json({
+                success: false,
+                debug: {
+                    errorMessage: "db search for song failed"
+                }
+            })
+    }
     
-    const songSearchResults = (
-        await searchDbForSongs(
-            searchQuery
-        )
-    ).map(toSongSearchItem);
+    const songSearchItems = songSearchResults.map(toSongSearchItem);
 
     return res
         .status(200)
         .json({
             success: true,
             itemCount: songSearchResults.length,
-            searchResults: songSearchResults,
+            searchResults: songSearchItems,
         })
 
 }

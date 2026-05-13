@@ -9,6 +9,7 @@ import { addSongTagReqHandler } from "./requestHandlers/addSongTag/addSongTagReq
 import { addTagToSongReqHandler } from "./requestHandlers/addTagToSong/addTagToSongReqHandler";
 import { fetchAllSongTags } from "./requestHandlers/fetchSongTagTypes/fetchSongTagTypesHelper";
 import { fetchSongTagTypesReqHandler } from "./requestHandlers/fetchSongTagTypes/fetchSongTagTypesReqHandler";
+import { searchSongWithTagReqHandler } from "./requestHandlers/searchSongs/searchSongWithTags/searchSongWithTagsReqHandler";
 
 const flowRouter = express.Router();
 
@@ -24,6 +25,7 @@ flowRouter.post(
 flowRouter.delete('/song/:songId', deleteSongReqHandler);
 
 flowRouter.get('/search', searchSongsReqHandler);
+flowRouter.get('/search-w-tag', searchSongWithTagReqHandler);
 
 flowRouter.get('/song/:songIdStr', getSongReqHandler);
 
