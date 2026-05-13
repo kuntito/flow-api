@@ -25,7 +25,7 @@ flowRouter.post(
 flowRouter.delete('/song/:songId', deleteSongReqHandler);
 
 flowRouter.get('/search', searchSongsReqHandler);
-flowRouter.get('/search-w-tag', searchSongWithTagReqHandler);
+flowRouter.get('/search-w-tags', searchSongWithTagReqHandler);
 
 flowRouter.get('/song/:songIdStr', getSongReqHandler);
 
