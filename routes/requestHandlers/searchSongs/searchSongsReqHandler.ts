@@ -52,9 +52,7 @@ const searchSongsReqHandler: RequestHandler<
 
     const searchQuery = validateRes.validatedQuery;
 
-    const songSearchResults = searchQuery === '*'
-        ? await getAllSongs()
-        : await searchDbForSongs(searchQuery);
+    const songSearchResults = await searchDbForSongs(searchQuery);
 
 
     if (songSearchResults == null) {

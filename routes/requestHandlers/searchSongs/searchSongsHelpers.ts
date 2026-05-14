@@ -13,15 +13,19 @@ export const searchDbForSongs = async (
 ): Promise<SongEntity[] | null> => {
     try {
         // TODO implement subsequence search.
-        const songSearchResults = await flowDb
+        const baseQuery = flowDb
             .select()
-            .from(songsTable)
-            .where(
-                or(
-                    ilike(songsTable.songTitle, `%${query}%`),
-                    ilike(songsTable.songArtistName, `%${query}%`)
-                )
-            );
+            .from(songsTable);
+
+        const songSearchResults = query === '*'
+            ? await baseQuery
+            : await baseQuery
+                .where(
+                    or(
+                        ilike(songsTable.songTitle, `%${query}%`),
+                        ilike(songsTable.songArtistName, `%${query}%`)
+                    )
+                );
 
         return songSearchResults;
 
