@@ -30,3 +30,21 @@ export const searchDbForSongs = async (
     }
     return null;
 }
+
+
+
+export const getAllSongs = async (
+
+): Promise<SongEntity[] | null> => {
+    try {
+        return await flowDb
+            .select()
+            .from(songsTable);
+    } catch (e) {
+        logDbError(
+            "couldn't fetch all songs",
+            e
+        );
+    }
+    return null;
+}

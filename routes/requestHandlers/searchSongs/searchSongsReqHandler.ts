@@ -1,7 +1,7 @@
 import { RequestHandler } from "express";
 import { validateSearchQuery } from "../../../helpers/miscHelpers";
 import { SongEntity } from "../../../schema/song-schema";
-import { searchDbForSongs } from "./searchSongsHelpers";
+import { getAllSongs, searchDbForSongs } from "./searchSongsHelpers";
 
 type SongSearchItem = {
     id: number;
@@ -52,7 +52,11 @@ const searchSongsReqHandler: RequestHandler<
 
     const searchQuery = validateRes.validatedQuery;
 
-    const songSearchResults = await searchDbForSongs(searchQuery);
+    const songSearchResults = searchQuery === '*'
+        ? await getAllSongs()
+        : await searchDbForSongs(searchQuery);
+
+
     if (songSearchResults == null) {
         return res
             .status(500)
