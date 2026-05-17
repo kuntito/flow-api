@@ -7,6 +7,7 @@ import {
     uploadSongToS3,
     insertSongInDb,
     deleteUploadedFile,
+    getInitialRecency,
 } from "./uploadSongHelpers";
 import { albumArtPlaceholderUrl } from "../../../util/constants";
 import { SongInsertEntity } from "../../../schema/song-schema";
@@ -100,6 +101,7 @@ const uploadSongReqHandler: RequestHandler = async (
         const aaUploadRes = await uploadAlbumArtToS3(aaFromFile);
         const aaUrl = aaUploadRes ? aaUploadRes.aaUrl : albumArtPlaceholderUrl;
     
+        const initSongRecency = await getInitialRecency();
         const songEntity: SongInsertEntity = {
             songS3Key: songS3Key,
             songTitle: songMdFromFile.title ?? "...",
@@ -107,6 +109,7 @@ const uploadSongReqHandler: RequestHandler = async (
             songAlbumArtUrl: aaUrl,
             // TODO duration should never be nullable if file is audio
             songDurationMillis: songMdFromFile.durationMillis ?? 0,
+            recency: initSongRecency,
         }
     
         const isSongInsertedToDb = await insertSongInDb(songEntity);

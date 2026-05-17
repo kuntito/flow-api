@@ -213,3 +213,50 @@ export const deleteUploadedFile = async (fp: string) => {
         console.log(`failed to delete ${fp}`);
     }
 };
+
+
+/**
+ * new songs are given a recency value between the lowest recency and now.
+ * 
+ * this way, new songs are added to the pool of incoming songs.
+ */
+export const getInitialRecency = async (
+
+): Promise<number> => {
+    const lowestRecency = await getLowestRecency();
+
+    const now = Date.now();
+
+    const randomRecency = Math.floor(
+        Math.random() * (now - lowestRecency) + lowestRecency
+    );
+
+    return randomRecency;
+}
+
+
+/**
+ * returns lowest recency for all songs.
+ * 
+ * defaults to zero if something goes wrong.
+ */
+const getLowestRecency = async (): Promise<number> => {
+    try {
+        const rows = await flowDb
+            .select({ 
+                recency: songsTable.recency
+            })
+            .from(songsTable)
+            .orderBy(songsTable.recency)
+            .limit(1);
+
+        return rows[0]?.recency ?? 0
+    } catch (e) {
+        logDbError(
+            "couldn't fetch lowest recency",
+            e
+        );
+    }
+
+    return 0;
+}
