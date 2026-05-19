@@ -1,12 +1,11 @@
-import { Request, RequestHandler, Response } from "express";
-import { doesSongExist, doesSongTagExist } from "../tagsToSong/helpers";
-import { SongAndTagEntity } from "../../../schema/songAndTag-schema";
-import { addTagToSongInDb } from "../tagsToSong/addTagToSong/addTagToSongHelpers";
+import { Request, Response, RequestHandler } from "express";
+import { doesSongExist, doesSongTagExist } from "../helpers";
+import { SongNotTagEntity } from "../../../../schema/songNotTag-schema";
+import { addNotTagToSongInDb } from "./addNotTagToSongHelpers";
 
-
-export type AddTagToSongResponse = 
+export type AddNotTagToSongResponse =
     | {
-        success: true
+        success: true;
     }
     | {
         success: false;
@@ -15,9 +14,9 @@ export type AddTagToSongResponse =
     }
 
 
-const addTagToSongReqHandler: RequestHandler = async (
+const addNotTagToSongReqHandler: RequestHandler = async (
     req: Request,
-    res: Response<AddTagToSongResponse>
+    res: Response<AddNotTagToSongResponse>
 ) => {
     const songIdStr = req.params.songIdStr;
     const songId = parseInt(songIdStr as string);
@@ -33,8 +32,8 @@ const addTagToSongReqHandler: RequestHandler = async (
             });
     }
 
-    const tagId = parseInt(req.body.tagId);
 
+    const tagId = parseInt(req.body.tagId);
     if (isNaN(tagId)) {
         return res
             .status(400)
@@ -54,12 +53,12 @@ const addTagToSongReqHandler: RequestHandler = async (
             .json({
                 success: false,
                 debug: {
-                    errorMessage: `song tag, '${tagId}', does not exist`
+                    errorMessage: `song tag, '${tagId}, does not exist`
                 }
-            })
+            });
     }
 
-
+    
     const isSongExist = await doesSongExist(songId);
     if (!isSongExist) {
         return res
@@ -67,33 +66,32 @@ const addTagToSongReqHandler: RequestHandler = async (
             .json({
                 success: false,
                 debug: {
-                    errorMessage: `song id, '${songId}', does not exist`
+                    errorMessage: `song id, ${songId}, does not exist`
                 }
             });
     }
 
 
-    const songAndTagEntity: SongAndTagEntity = {
+    const songNotTagEntity: SongNotTagEntity = {
         songId: songId,
         tagId: tagId,
     }
-    const isTagAddedSuccess = await addTagToSongInDb(songAndTagEntity);
 
+    const isTagAddedSuccess = await addNotTagToSongInDb(songNotTagEntity);
     if (isTagAddedSuccess) {
         return res
             .status(201)
             .json({
-                success: true
-            })
+                success: true,
+            });
     } else {
         return res
             .status(500)
             .json({
                 success: false,
-                clientErrorMessage: "couldn't tag song"
+                clientErrorMessage: "couldn't add not-tag to song"
             });
     }
-
 }
 
-export { addTagToSongReqHandler };
+export { addNotTagToSongReqHandler };

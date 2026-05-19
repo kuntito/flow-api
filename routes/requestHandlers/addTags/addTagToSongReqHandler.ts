@@ -1,8 +1,7 @@
-import { Request, RequestHandler, Response } from "express";
-import { doesSongExist, doesSongTagExist } from "../tagsToSong/helpers";
-import { SongAndTagEntity } from "../../../schema/songAndTag-schema";
+import { Request, Response, RequestHandler } from "express";
 import { addTagToSongInDb } from "../tagsToSong/addTagToSong/addTagToSongHelpers";
-
+import { SongAndTagEntity } from "../../../schema/songAndTag-schema";
+import { doesSongExist, doesSongTagExist } from "../tagsToSong/helpers";
 
 export type AddTagToSongResponse = 
     | {
