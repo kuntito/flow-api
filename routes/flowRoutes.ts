@@ -10,6 +10,7 @@ import { addTagToSongReqHandler } from "./requestHandlers/addTagToSong/addTagToS
 import { fetchSongTagTypesReqHandler } from "./requestHandlers/fetchSongTagTypes/fetchSongTagTypesReqHandler";
 import { searchSongWithTagReqHandler } from "./requestHandlers/searchSongs/searchSongWithTags/searchSongWithTagsReqHandler";
 import { addNotTagToSongReqHandler } from "./requestHandlers/tagsToSong/addNotTagToSong/addNotTagToSongReqHandler";
+import { getSongsForTaggingRH } from "./requestHandlers/getSongsForTagging/getSongsForTaggingRH";
 
 const flowRouter = express.Router();
 
@@ -40,5 +41,7 @@ flowRouter.post('/song/:songIdStr/tag', addTagToSongReqHandler);
 flowRouter.post('/song/:songIdStr/notTag', addNotTagToSongReqHandler);
 
 flowRouter.get('/song-tag-types', fetchSongTagTypesReqHandler);
+
+flowRouter.get('/songsForTagging/:tagIdStr', getSongsForTaggingRH);
 
 export default flowRouter;
