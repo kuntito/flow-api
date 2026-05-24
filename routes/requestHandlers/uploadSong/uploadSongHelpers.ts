@@ -231,6 +231,10 @@ export const getInitialRecency = async (
         Math.random() * (now - lowestRecency) + lowestRecency
     );
 
+    // console.log(`lowestRecency: ${formatTimestamp(lowestRecency)}`);
+    // console.log(`now: ${formatTimestamp(now)}`);
+    // console.log(`randomRecency: ${formatTimestamp(randomRecency)}`);
+    
     return randomRecency;
 }
 
