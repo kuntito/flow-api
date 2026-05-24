@@ -33,7 +33,9 @@ flowRouter.get('/song/:songIdStr', getSongReqHandler);
 // the API host spins down every 15 minutes if it doesn't receive a request
 // i've defined this route that does nothing so a robot can keep the API live
 // by hitting this route before the host spins down.
-flowRouter.get('/dummy', (req, res) => res.send('ok'));
+flowRouter.get('/dummy', (req, res) => {
+    res.send('ok')
+});
 
 flowRouter.post('/song-tag', addSongTagReqHandler);
 
