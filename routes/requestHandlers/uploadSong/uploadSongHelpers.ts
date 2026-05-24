@@ -260,3 +260,20 @@ const getLowestRecency = async (): Promise<number> => {
 
     return 0;
 }
+
+/**
+ * formats timestamp as human readable
+ * 
+ * i.e. 03-may-26, 00:25
+ */
+const formatTimestamp = (timestamp: number): string => {
+    const date = new Date(timestamp);
+    
+    const day = date.getDate().toString().padStart(2, '0');
+    const month = date.toLocaleString('en-US', { month: 'short' }).toLowerCase();
+    const year = date.getFullYear().toString().slice(-2);
+    const hours = date.getHours().toString().padStart(2, '0');
+    const minutes = date.getMinutes().toString().padStart(2, '0');
+    
+    return `${day}-${month}-${year}, ${hours}:${minutes}`;
+};
