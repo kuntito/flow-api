@@ -12,10 +12,12 @@ import { searchSongWithTagReqHandler } from "./requestHandlers/searchSongs/searc
 import { addNotTagToSongReqHandler } from "./requestHandlers/tagsToSong/addNotTagToSong/addNotTagToSongReqHandler";
 import { getSongsForTaggingRH } from "./requestHandlers/getSongsForTagging/getSongsForTaggingRH";
 import { getMoodsReqHandler } from "./requestHandlers/getMoods/getMoodsReqHandler";
+import { getMoodNextSongReqHandler } from "./requestHandlers/getMoodNextSongRh/getMoodNextSongRh";
 
 const flowRouter = express.Router();
 
 flowRouter.get("/next-song", getNextSongReqHandler);
+flowRouter.get("/next-song/:tagIdStr", getMoodNextSongReqHandler);
 
 const fileUploadMiddleware = multer({ dest: 'temp-uploads/'});
 flowRouter.post(
