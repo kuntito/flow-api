@@ -1,6 +1,7 @@
 import { pgTable, integer, serial, timestamp } from "drizzle-orm/pg-core";
 import { songsTable } from "./song-schema";
 
+// TODO rename this to song request table
 export const songPlayLogTN = "songPlayLog";
 export const songPlayLogTable = pgTable("songPlayLog", {
     id: serial("id")

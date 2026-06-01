@@ -215,6 +215,18 @@ export const deleteUploadedFile = async (fp: string) => {
 };
 
 
+// TODO the recency generated here is random but uploaded songs
+// tend to cluster during playback.
+// i think i've identified the issue.
+// regular playback occurs in clusters, i listen to songs back to back within a given period.
+// so, if i look at my listening history, i'd have clusters of recency, say, 300-400
+// now, this fn, picks the lowest recency, say it's 0 and the current time, say it's 1000
+// if i uploaded three songs and it gave recencies, 34, 50 and 74
+// these are random, but there's no other song in-between them, so when they play
+// they'd play after one another.
+// the initial recency should get all the clusters for listened songs.
+// then pick a random time within any cluster.
+// this way, the uploaded song, is bound to interleave between existing songs.
 /**
  * new songs are given a recency value between the lowest recency and now.
  * 
