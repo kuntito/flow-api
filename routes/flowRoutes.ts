@@ -11,6 +11,7 @@ import { fetchSongTagTypesReqHandler } from "./requestHandlers/fetchSongTagTypes
 import { searchSongWithTagReqHandler } from "./requestHandlers/searchSongs/searchSongWithTags/searchSongWithTagsReqHandler";
 import { addNotTagToSongReqHandler } from "./requestHandlers/tagsToSong/addNotTagToSong/addNotTagToSongReqHandler";
 import { getSongsForTaggingRH } from "./requestHandlers/getSongsForTagging/getSongsForTaggingRH";
+import { getMoodsReqHandler } from "./requestHandlers/getMoods/getMoodsReqHandler";
 
 const flowRouter = express.Router();
 
@@ -45,5 +46,7 @@ flowRouter.post('/song/:songIdStr/notTag', addNotTagToSongReqHandler);
 flowRouter.get('/song-tag-types', fetchSongTagTypesReqHandler);
 
 flowRouter.get('/songsForTagging/:tagIdStr', getSongsForTaggingRH);
+
+flowRouter.get('/moods', getMoodsReqHandler);
 
 export default flowRouter;
