@@ -126,3 +126,26 @@ export const validateSearchQuery = (
         validatedQuery: trimmedQuery
     }
 }
+
+/**
+ * pick a random element from the array
+ */
+export const pickRandom = <T>(arr: T[]): T => {
+    const index = Math.floor(Math.random() * arr.length);
+    return arr[index];
+};
+
+
+/**
+ * gets you a random integer between `min` and `max`
+ * 
+ * both `min` and `max` are inclusive.
+ */
+export const randomBetween = (
+    min: number,
+    max: number
+): number => {
+    return Math.floor(
+        Math.random() * (max - min + 1)
+    ) + min;
+};

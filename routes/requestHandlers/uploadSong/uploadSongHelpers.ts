@@ -10,6 +10,8 @@ import {
 import { SongInsertEntity, songsTable } from "../../../schema/song-schema";
 import { flowDb } from "../../../clients/neonDbClient";
 import { logDbError } from "../../../helpers/dbHelpers";
+import ms from "ms";
+import { pickRandom, randomBetween } from "../../../helpers/miscHelpers";
 
 type AlbumArtFromFile = {
     buffer: Buffer;
@@ -215,41 +217,6 @@ export const deleteUploadedFile = async (fp: string) => {
 };
 
 
-// TODO the recency generated here is random but uploaded songs
-// tend to cluster during playback.
-// i think i've identified the issue.
-// regular playback occurs in clusters, i listen to songs back to back within a given period.
-// so, if i look at my listening history, i'd have clusters of recency, say, 300-400
-// now, this fn, picks the lowest recency, say it's 0 and the current time, say it's 1000
-// if i uploaded three songs and it gave recencies, 34, 50 and 74
-// these are random, but there's no other song in-between them, so when they play
-// they'd play after one another.
-// the initial recency should get all the clusters for listened songs.
-// then pick a random time within any cluster.
-// this way, the uploaded song, is bound to interleave between existing songs.
-/**
- * new songs are given a recency value between the lowest recency and now.
- * 
- * this way, new songs are added to the pool of incoming songs.
- */
-export const getInitialRecency = async (
-
-): Promise<number> => {
-    const lowestRecency = await getLowestRecency();
-
-    const now = Date.now();
-
-    const randomRecency = Math.floor(
-        Math.random() * (now - lowestRecency) + lowestRecency
-    );
-
-    // console.log(`lowestRecency: ${formatTimestamp(lowestRecency)}`);
-    // console.log(`now: ${formatTimestamp(now)}`);
-    // console.log(`randomRecency: ${formatTimestamp(randomRecency)}`);
-    
-    return randomRecency;
-}
-
 
 /**
  * returns lowest recency for all songs.
@@ -276,6 +243,128 @@ const getLowestRecency = async (): Promise<number> => {
 
     return 0;
 }
+
+/**
+ * returns a recency timestamp between the song with the lowest recency, 
+ * and the current timestamp, `now`.
+ */
+const getRandomRecency = async (
+    
+): Promise<number> => {
+
+    const lowestRecency = await getLowestRecency();
+
+    const now = Date.now();
+
+    const randomRecency = Math.floor(
+        Math.random() * (now - lowestRecency) + lowestRecency
+    );
+
+    // console.log(`lowestRecency: ${formatTimestamp(lowestRecency)}`);
+    // console.log(`now: ${formatTimestamp(now)}`);
+    // console.log(`randomRecency: ${formatTimestamp(randomRecency)}`);
+    
+    return randomRecency;
+}
+
+const getAllSongRecencies = async (
+
+): Promise<number[] | null> => {
+    try {
+        const rows = await flowDb
+            .select({ recency: songsTable.recency })
+            .from(songsTable);
+
+        return rows.map(r => r.recency);
+    } catch (e) {
+        logDbError("couldn't fetch recencies", e);
+    }
+
+    return null;
+};
+
+type ListeningCluster = {
+    startTime: number;
+    endTime: number;
+};
+
+const CLUSTER_GAP_MS = ms("5m");
+
+const getListeningClusters = (
+    sortedSongRecencies: number[],
+): ListeningCluster[] => {
+    if (sortedSongRecencies.length === 0) return [];
+
+    const allClusters: ListeningCluster[] = [];
+
+    const dim = sortedSongRecencies.length;
+    let startTime: null | number = null;
+
+    for (let i = 0; i < dim; i++) {
+        const curRecency = sortedSongRecencies[i];
+        if (startTime == null) {
+            startTime = curRecency;
+        }
+
+        const nextRecency = i+1 < dim ? sortedSongRecencies[i + 1] : null;
+        const isClusterEnd = nextRecency == null || nextRecency > curRecency + CLUSTER_GAP_MS
+        if (isClusterEnd) {
+            if (startTime != curRecency) {
+                allClusters.push({
+                    startTime: startTime,
+                    endTime: curRecency,
+                })
+            }    
+            startTime = null;
+        }
+    }
+
+    return allClusters;
+}
+
+/**
+ * when i add new songs to flow, i want them dispersed throughout the existing playback queue.
+ * 
+ * listening happens in sessions — songs played back to back form `ListeningCluster`s.
+ * 
+ * for new songs, i pick a random cluster and assign a recency within that cluster's range.
+ * this way, new songs interleave with existing songs.
+ * 
+ * without this, there's a tendency where new songs fall into gaps between clusters
+ * and end up playing one after the other.
+ * 
+ * if no clusters exist, falls back to a random recency between lowest and now.
+ */
+export const getInitialRecency = async (
+
+): Promise<number> => {
+    const allRecencies = await getAllSongRecencies();
+    if (allRecencies == null) {
+        return getRandomRecency();
+    }
+
+
+    allRecencies.sort((a, b) => a - b);
+    const listeningClusters = getListeningClusters(allRecencies);
+    if (listeningClusters.length === 0) {
+        return getRandomRecency();
+    }
+
+    const randomCluster = pickRandom(listeningClusters);
+
+    // console.log(`cluster start: ${formatTimestamp(randomCluster.startTime)}`);
+    // console.log(`cluster end: ${formatTimestamp(randomCluster.endTime)}`);
+
+    const initRecency = randomBetween(
+        randomCluster.startTime,
+        randomCluster.endTime,
+    );
+
+    // console.log(`initRecency: ${formatTimestamp(initRecency)}`);
+
+    return initRecency;
+}
+
 
 /**
  * formats timestamp as human readable
