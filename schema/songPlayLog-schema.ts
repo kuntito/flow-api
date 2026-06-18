@@ -8,7 +8,12 @@ export const songPlayLogTable = pgTable("songPlayLog", {
         .primaryKey(),
     songId: integer("songId")
         .notNull()
-        .references(() => songsTable.songId),
+        .references(
+            () => songsTable.songId,
+            {
+                onDelete: 'cascade',
+            }
+        ),
     playedAt: timestamp("playedAt")
         .notNull()
         .defaultNow()

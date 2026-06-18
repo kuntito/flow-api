@@ -6,7 +6,12 @@ export const songsAndTagTN = "songAndTag";
 export const songAndTagTable = pgTable(songsAndTagTN, {
     songId: integer("song_id")
         .notNull()
-        .references(() => songsTable.songId),
+        .references(
+            () => songsTable.songId,
+            { 
+                onDelete: 'cascade'
+            }
+        ),
     tagId: integer("tag_id")
         .notNull()
         .references(() => songTagTypesTable.tagId),
