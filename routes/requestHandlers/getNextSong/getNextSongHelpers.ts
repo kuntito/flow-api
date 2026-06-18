@@ -14,7 +14,7 @@ const RAP_TAG_ID = 4;
 export const getNextSong = async (
     tagId?: number,
     obeyWindown: boolean = true,
-): Promise<SongEntity | null> {
+): Promise<SongEntity | null> => {
     const excludeRap = checkWinddownTime() && obeyWindown;
 
     try {
