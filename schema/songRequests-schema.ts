@@ -1,9 +1,9 @@
 import { pgTable, integer, serial, timestamp } from "drizzle-orm/pg-core";
 import { songsTable } from "./song-schema";
 
-// TODO rename this to song request table
-export const songPlayLogTN = "songPlayLog";
-export const songPlayLogTable = pgTable("songPlayLog", {
+// TODO perhaps better name, these are songs the API sends
+export const songRequestsTN = "songRequests";
+export const songRequestsTable = pgTable(songRequestsTN, {
     id: serial("id")
         .primaryKey(),
     songId: integer("songId")
@@ -19,5 +19,5 @@ export const songPlayLogTable = pgTable("songPlayLog", {
         .defaultNow()
 });
 
-export type SongPlayLogEntity = typeof songPlayLogTable.$inferSelect;
-export type SongPlayLogInsertEntity = typeof songPlayLogTable.$inferInsert;
+export type SongPlayLogEntity = typeof songRequestsTable.$inferSelect;
+export type SongPlayLogInsertEntity = typeof songRequestsTable.$inferInsert;

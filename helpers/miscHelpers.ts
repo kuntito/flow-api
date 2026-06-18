@@ -6,7 +6,7 @@ import { getSignedObjectUrlS3 } from "./s3Helpers";
 import { flowDb } from "../clients/neonDbClient";
 import { eq } from "drizzle-orm";
 import { logDbError } from "./dbHelpers";
-import { songPlayLogTable } from "../schema/songPlayLog-schema";
+import { songRequestsTable } from "../schema/songRequests-schema";
 
 /**
  * an abstraction over the `ms` npm package,.
@@ -64,7 +64,7 @@ const updateSongRecency = async (
 const logSongRequest = async (songId: number): Promise<void> => {
     try {
         await flowDb
-            .insert(songPlayLogTable)
+            .insert(songRequestsTable)
             .values({ songId: songId });
     } catch (e) {
         logDbError(
