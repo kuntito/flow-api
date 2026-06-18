@@ -1,7 +1,7 @@
 import { Request, RequestHandler, Response } from "express";
 import { prepareSongForClient } from "../../../helpers/miscHelpers";
 import { SongWithUrl } from "../../types/SongWithUrl";
-import { getLeastRecentSong } from "./getNextSongHelpers";
+import { getNextSong } from "./getNextSongHelpers";
 
 
 type GetNextSongResponse = {
@@ -35,7 +35,7 @@ const getNextSongReqHandler: RequestHandler = async (
     res.setHeader('Cache-Control', 'no-store');
 
     // fetch song from db..
-    const songEntity = await getLeastRecentSong();
+    const songEntity = await getNextSong();
     if (songEntity == null) {
         return res
             .status(500)
