@@ -2,13 +2,7 @@ import { RequestHandler } from "express";
 import { validateSearchQuery } from "../../../helpers/miscHelpers";
 import { SongEntity } from "../../../schema/song-schema";
 import { getAllSongs, searchDbForSongs } from "./searchSongsHelpers";
-
-type SongSearchItem = {
-    id: number;
-    title: string;
-    artistStr: string;
-    albumArtUrl: string;
-}
+import { SongSearchItem } from "../../types/SongSearchItem";
 
 const toSongSearchItem = (
     songEntity: SongEntity

@@ -13,6 +13,7 @@ import { addNotTagToSongReqHandler } from "./requestHandlers/tagsToSong/addNotTa
 import { getSongsForTaggingRH } from "./requestHandlers/getSongsForTagging/getSongsForTaggingRH";
 import { getMoodsReqHandler } from "./requestHandlers/getMoods/getMoodsReqHandler";
 import { getMoodNextSongReqHandler } from "./requestHandlers/getMoodNextSongRh/getMoodNextSongRh";
+import { getCiSongSearchRh } from "./requestHandlers/getCacheItemsSongSearch/getCiSongSearchRh";
 
 const flowRouter = express.Router();
 
@@ -30,6 +31,7 @@ flowRouter.delete('/song/:songId', deleteSongReqHandler);
 
 flowRouter.get('/search', searchSongsReqHandler);
 flowRouter.get('/search-w-tags', searchSongWithTagReqHandler);
+flowRouter.get('/cache-song-search', getCiSongSearchRh);
 
 flowRouter.get('/song/:songIdStr', getSongReqHandler);
 
