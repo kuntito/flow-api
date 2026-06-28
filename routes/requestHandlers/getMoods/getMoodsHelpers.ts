@@ -7,6 +7,7 @@ import { songsTable } from "../../../schema/song-schema";
 import { songAndTagTable } from "../../../schema/songAndTag-schema";
 import { MOOD_DURATION_MS } from "../../../util/constants";
 import { SongTagAndDuration } from "../../../models/SongTagAndDuration";
+import ms from "ms";
 
 /**
  * a mood is only valid, if there's enough playback minutes.
@@ -22,11 +23,16 @@ export const getAllMoods = async (
 
     return songTagAndDuration
         .filter(snd => snd.totalDurationMillis >= MOOD_DURATION_MS)
-        .map( snd => ({
-            tagId: snd.tagId,
-            moodName: snd.tagName,
-            durationMillis: MOOD_DURATION_MS
-        }));
+        .map( snd => {
+            return {
+                tagId: snd.tagId,
+                moodName: snd.tagName,
+                // TODO impl mapping each mood to duration
+                durationMillis: snd.tagName === 'wind-down'
+                    ? ms("90m")
+                    : MOOD_DURATION_MS
+            }
+        });
 }
 
 
