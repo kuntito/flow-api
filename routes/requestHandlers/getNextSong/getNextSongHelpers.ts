@@ -1,7 +1,6 @@
 import { asc, eq, notInArray, inArray, and, SQL } from "drizzle-orm";
 import { flowDb } from "../../../clients/neonDbClient";
 import { logDbError } from "../../../helpers/dbHelpers";
-import { getTotalSongCount } from "../../../helpers/songDbHelpers";
 import { SongEntity, songsTable } from "../../../schema/song-schema";
 import { songTagMatchTable } from "../../../schema/songTagMatch-schema";
 

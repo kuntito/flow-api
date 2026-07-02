@@ -60,16 +60,29 @@ export const safeDeleteSongFromDb = async (
 };
 
 
-// TODO docstring
-export const getTotalSongCount = async (): Promise<number> => {
+/**
+ * 
+ * returns how many songs in db.
+ * 
+ * if something goes wrong, returns null.
+ */
+export const getTotalSongCount = async (
+
+): Promise<number | null> => {
     try {
         const rows = await flowDb
-            .select({ count: sql<number>`count(*)` })
+            .select({
+                count: sql<number>`count(*)`
+                    .mapWith(Number) 
+            })
             .from(songsTable);
 
         return rows[0]?.count ?? 0;
     } catch (e) {
-        logDbError("couldn't count songs", e);
-        return 0;
+        logDbError(
+            "couldn't count songs",
+            e
+        );
     }
+    return null;
 };
