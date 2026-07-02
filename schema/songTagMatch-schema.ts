@@ -17,7 +17,12 @@ export const songTagMatchTable = pgTable(
             ),
         tagId: integer("tag_id")
             .notNull()
-            .references(() => songTagTypesTable.tagId),
+            .references(
+                () => songTagTypesTable.tagId,
+                {
+                    onDelete: 'cascade'
+                }
+            ),
         isMatch: boolean("is_match")
             .notNull()
     },
