@@ -3,9 +3,8 @@ import { flowDb } from "../../../clients/neonDbClient";
 import { logDbError } from "../../../helpers/dbHelpers";
 import { SongTagEntity, songTagTypesTable } from "../../../schema/songTagTypes-schema";
 import { SongForTagging } from "./getSongsForTaggingRH";
-import { songAndTagTable } from "../../../schema/songAndTag-schema";
-import { songsNotTagTable } from "../../../schema/songNotTag-schema";
 import { SongEntity, songsTable } from "../../../schema/song-schema";
+import { songTagMatchTable } from "../../../schema/songTagMatch-schema";
 
 
 export const getTag = async(
@@ -37,11 +36,13 @@ const getTaggedSongIds = async (
 ): Promise<number[] | null> => {
     try {
         const rows = await flowDb
-            .select({ songId: songAndTagTable.songId })
-            .from(songAndTagTable)
+            .select({ 
+                songId: songTagMatchTable.songId 
+            })
+            .from(songTagMatchTable)
             .where(
                 eq(
-                    songAndTagTable.tagId,
+                    songTagMatchTable.tagId,
                     tagId
                 )
             );
@@ -58,57 +59,27 @@ const getTaggedSongIds = async (
 
 
 /**
- * songs that i've said don't fit this tag.
+ * returns songs that haven't been tagged with `tag`
+ * 
+ * songs are classed as tagged,
+ * if they have an entry in `SongTagMatchTable`
  */
-const getNotTaggedSongIds = async (
-    tagId: number
-): Promise<number[] | null> => {
-    try {
-        const rows = await flowDb
-            .select({ songId: songsNotTagTable.songId })
-            .from(songsNotTagTable)
-            .where(
-                eq(
-                    songsNotTagTable.tagId,
-                    tagId
-                )
-            );
-
-        return rows.map(r => r.songId);
-    } catch (e) {
-        logDbError(
-            `couldn't fetch not-tagged song ids for tagId=${tagId}`,
-            e
-        );
-    }
-
-    return null;
-};
-
-
-
 export const getSongsForTagging = async (
     tag: SongTagEntity,
     batchSize: number,
 ): Promise<SongEntity[] | null> => {
     try {
-        const songsAlreadyTagged = await getTaggedSongIds(tag.tagId);
-        if (songsAlreadyTagged == null) return null;
-
-        const songsNotMatchingTag = await getNotTaggedSongIds(tag.tagId);
-        if (songsNotMatchingTag == null) return null;
-
-
-        const songIdsNotForTagging = songsAlreadyTagged.concat(songsNotMatchingTag);
+        const idsTaggedSongs = await getTaggedSongIds(tag.tagId);
+        if (idsTaggedSongs == null) return null;
 
         const rows = await flowDb
             .select()
             .from(songsTable)
             .where(
-                songIdsNotForTagging.length > 0
+                idsTaggedSongs.length > 0
                     ? notInArray(
                         songsTable.songId,
-                        songIdsNotForTagging
+                        idsTaggedSongs
                     )
                     : undefined
             )

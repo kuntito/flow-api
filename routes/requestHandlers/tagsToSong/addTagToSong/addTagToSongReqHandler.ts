@@ -1,7 +1,7 @@
 import { Request, RequestHandler, Response } from "express";
-import { SongAndTagEntity } from "../../../../schema/songAndTag-schema";
 import { addTagToSongInDb } from "./addTagToSongHelpers";
 import { doesSongExist, doesSongTagExist } from "../helpers";
+import { SongTagPair } from "../../../types/SongTagPair";
 
 export type AddTagToSongResponse = 
     | {
@@ -72,11 +72,11 @@ const addTagToSongReqHandler: RequestHandler = async (
     }
 
 
-    const songAndTagEntity: SongAndTagEntity = {
+    const songTagPair: SongTagPair = {
         songId: songId,
         tagId: tagId,
     }
-    const isTagAddedSuccess = await addTagToSongInDb(songAndTagEntity);
+    const isTagAddedSuccess = await addTagToSongInDb(songTagPair);
 
     if (isTagAddedSuccess) {
         return res

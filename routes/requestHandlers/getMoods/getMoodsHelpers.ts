@@ -1,13 +1,13 @@
-import { eq, sql, gte } from "drizzle-orm";
+import { eq, sql, gte, and } from "drizzle-orm";
 import { flowDb } from "../../../clients/neonDbClient";
 import { Mood } from "../../../models/Mood";
 import { songTagTypesTable } from "../../../schema/songTagTypes-schema";
 import { logDbError } from "../../../helpers/dbHelpers";
 import { songsTable } from "../../../schema/song-schema";
-import { songAndTagTable } from "../../../schema/songAndTag-schema";
 import { MOOD_DURATION_MS } from "../../../util/constants";
 import { SongTagAndDuration } from "../../../models/SongTagAndDuration";
 import ms from "ms";
+import { songTagMatchTable } from "../../../schema/songTagMatch-schema";
 
 /**
  * a mood is only valid, if there's enough playback minutes.
@@ -37,7 +37,7 @@ export const getAllMoods = async (
 
 
 /**
- * maps it song tag to the total duration of all songs tagged.
+ * maps song tag types to the total duration of their songs.
  */
 const getSongTagsAndDuration = async (
 
@@ -55,17 +55,23 @@ const getSongTagsAndDuration = async (
             })
             .from(songTagTypesTable)
             .innerJoin(
-                songAndTagTable,
+                songTagMatchTable,
                 eq(
                     songTagTypesTable.tagId,
-                    songAndTagTable.tagId,
-                )
+                    songTagMatchTable.tagId,
+                ),
             )
             .innerJoin(
                 songsTable,
-                eq(
-                    songAndTagTable.songId,
-                    songsTable.songId
+                and(
+                    eq(
+                        songTagMatchTable.songId,
+                        songsTable.songId
+                    ),
+                    eq(
+                        songTagMatchTable.isMatch,
+                        true
+                    )
                 )
             )
             .groupBy(

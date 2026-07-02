@@ -3,7 +3,7 @@ import { flowDb } from "../../../clients/neonDbClient";
 import { logDbError } from "../../../helpers/dbHelpers";
 import { getTotalSongCount } from "../../../helpers/songDbHelpers";
 import { SongEntity, songsTable } from "../../../schema/song-schema";
-import { songAndTagTable } from "../../../schema/songAndTag-schema";
+import { songTagMatchTable } from "../../../schema/songTagMatch-schema";
 
 
 // TODO if i ever delete this tag, 
@@ -23,13 +23,19 @@ export const getNextSong = async (
         if (tagId != null) {
             const idsSongsWithTag = flowDb
                 .select({
-                    songId: songAndTagTable.songId,
+                    songId: songTagMatchTable.songId,
                 })
-                .from(songAndTagTable)
+                .from(songTagMatchTable)
                 .where(
-                    eq(
-                        songAndTagTable.tagId,
-                        tagId,
+                    and(
+                        eq(
+                            songTagMatchTable.tagId,
+                            tagId,
+                        ),
+                        eq(
+                            songTagMatchTable.isMatch,
+                            true
+                        )
                     )
                 );
 
@@ -116,13 +122,19 @@ export const getRapSongIds = async (
     try {
         const rows = await flowDb
             .select({ 
-                songId: songAndTagTable.songId 
+                songId: songTagMatchTable.songId 
             })
-            .from(songAndTagTable)
+            .from(songTagMatchTable)
             .where(
-                eq(
-                    songAndTagTable.tagId,
-                    RAP_TAG_ID
+                and(
+                    eq(
+                        songTagMatchTable.tagId,
+                        RAP_TAG_ID
+                    ),
+                    eq(
+                        songTagMatchTable.isMatch,
+                        true
+                    )
                 )
             );
 

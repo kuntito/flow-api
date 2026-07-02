@@ -1,8 +1,8 @@
-import { eq } from "drizzle-orm";
+import { and, eq } from "drizzle-orm";
 import { flowDb } from "../../../clients/neonDbClient";
 import { SongEntity, songsTable } from "../../../schema/song-schema";
-import { songAndTagTable } from "../../../schema/songAndTag-schema";
 import { logDbError } from "../../../helpers/dbHelpers";
+import { songTagMatchTable } from "../../../schema/songTagMatch-schema";
 
 
 export const moodGetLeastRecentSong = async (
@@ -15,15 +15,21 @@ export const moodGetLeastRecentSong = async (
             })
             .from(songsTable)
             .innerJoin(
-                songAndTagTable,
-                eq(
-                    songsTable.songId,
-                    songAndTagTable.songId,
+                songTagMatchTable,
+                and(
+                    eq(
+                        songsTable.songId,
+                        songTagMatchTable.songId,
+                    ),
+                    eq(
+                        songTagMatchTable.isMatch,
+                        true
+                    )
                 )
             )
             .where(
                 eq(
-                    songAndTagTable.tagId,
+                    songTagMatchTable.tagId,
                     tagId
                 )
             )

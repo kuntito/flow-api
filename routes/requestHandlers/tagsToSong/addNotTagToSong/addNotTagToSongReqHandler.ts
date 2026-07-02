@@ -1,7 +1,7 @@
 import { Request, Response, RequestHandler } from "express";
 import { doesSongExist, doesSongTagExist } from "../helpers";
-import { SongNotTagEntity } from "../../../../schema/songNotTag-schema";
 import { addNotTagToSongInDb } from "./addNotTagToSongHelpers";
+import { SongTagPair } from "../../../types/SongTagPair";
 
 export type AddNotTagToSongResponse =
     | {
@@ -72,12 +72,12 @@ const addNotTagToSongReqHandler: RequestHandler = async (
     }
 
 
-    const songNotTagEntity: SongNotTagEntity = {
+    const songTagPair: SongTagPair = {
         songId: songId,
         tagId: tagId,
     }
 
-    const isTagAddedSuccess = await addNotTagToSongInDb(songNotTagEntity);
+    const isTagAddedSuccess = await addNotTagToSongInDb(songTagPair);
     if (isTagAddedSuccess) {
         return res
             .status(201)
