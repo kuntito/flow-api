@@ -1,12 +1,15 @@
 import { RequestHandler, Request, Response } from "express";
 import { SongTagType } from "../../types/SongTagType";
-import { fetchAllSongTags } from "./fetchSongTagTypesHelper";
+import { fetchAllSongTags, fetchAllSongTagsWithWork } from "./fetchSongTagTypesHelper";
 
+export type SongTagTypeWithWork = SongTagType & {
+    hasUnaddressed: boolean;
+};
 
 type FetchSongTagTypesResponse = {
     success: true;
     tagCount: number,
-    songTagTypes: SongTagType[]
+    songTagTypes: SongTagTypeWithWork[]
 } | {
     success: false;
     debug: object;
@@ -16,7 +19,7 @@ const fetchSongTagTypesReqHandler: RequestHandler = async (
     req: Request,
     res: Response<FetchSongTagTypesResponse>
 ) => {
-    const maybeSongTagTypes = await fetchAllSongTags();
+    const maybeSongTagTypes = await fetchAllSongTagsWithWork();
 
     if (maybeSongTagTypes) {
         return res
