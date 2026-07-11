@@ -7,25 +7,6 @@ import { SongEntity, songsTable } from "../../../schema/song-schema";
 import { songTagMatchTable } from "../../../schema/songTagMatch-schema";
 
 
-export const getTag = async(
-    tagId: number,
-): Promise<SongTagEntity | null> => {
-    try {
-        const rows = await flowDb
-            .select()
-            .from(songTagTypesTable)
-            .where(eq(songTagTypesTable.tagId, tagId));
-
-        return rows[0] ?? null
-    } catch (e) {
-        logDbError(
-            `couldn't fetch tag with ${tagId}`,
-            e
-        )
-    }
-
-    return null;
-}
 
 
 /**

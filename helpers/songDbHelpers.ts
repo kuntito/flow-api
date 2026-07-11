@@ -2,6 +2,7 @@ import { flowDb } from "../clients/neonDbClient";
 import { SongEntity, songsTable } from "../schema/song-schema";
 import { eq, sql } from "drizzle-orm";
 import { logDbError } from "./dbHelpers";
+import { SongTagEntity, songTagTypesTable } from "../schema/songTagTypes-schema";
 
 /**
  * fetches a songEntity from the db.
@@ -86,3 +87,31 @@ export const getTotalSongCount = async (
     }
     return null;
 };
+
+/**
+ * gets song tag from db.
+ */
+export const getSongTag = async(
+    tagId: number,
+): Promise<SongTagEntity | null> => {
+    try {
+        const rows = await flowDb
+            .select()
+            .from(songTagTypesTable)
+            .where(
+                eq(
+                    songTagTypesTable.tagId,
+                    tagId
+                )
+            );
+
+        return rows[0] ?? null
+    } catch (e) {
+        logDbError(
+            `couldn't fetch tag with ${tagId}`,
+            e
+        )
+    }
+
+    return null;
+}

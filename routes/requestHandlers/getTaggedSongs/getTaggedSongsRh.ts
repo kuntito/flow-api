@@ -1,32 +1,32 @@
-import { RequestHandler, Request, Response } from "express";
-import { getSongsForTagging, toSongForTagging } from "./getSongsForTaggingHelpers";
+import { Request, RequestHandler, Response } from "express";
 import { getSongTag } from "../../../helpers/songDbHelpers";
+import { getTaggedSongs } from "./getTaggedSongsHelpers";
 
-export type SongForTagging = {
+export type TaggedSong = {
     songId: number;
     songTitle: string;
     artistStr: string;
     albumArtUrl: string;
+    isMatch: boolean;
 }
 
-
-type GetSongsForTaggingResponse = 
+type GetTaggedSongsResponse = 
     | {
         success: true;
         tagName: string;
         tagDescription: string;
         itemCount: number;
-        songsForTagging: SongForTagging[];
+        items: TaggedSong[],
     }
     | {
         success: false;
         debug: object;
-    }
+    };
 
-const BATCH_SIZE = 16;
-const getSongsForTaggingRH: RequestHandler = async (
+    
+const getTaggedSongsRh: RequestHandler = async (
     req: Request,
-    res: Response<GetSongsForTaggingResponse>
+    res: Response<GetTaggedSongsResponse>
 ) => {
     const { tagIdStr } = req.params;
 
@@ -40,48 +40,43 @@ const getSongsForTaggingRH: RequestHandler = async (
                 debug: {
                     errorMessage: "tag id should be a number"
                 }
-            });
+            })
     }
 
-    
-    const maybeTag = await getSongTag(tagId);
-    if (maybeTag == null) {
+    const tag = await getSongTag(tagId);
+    if (tag == null) {
         return res
             .status(404)
             .json({
                 success: false,
                 debug: {
-                    errorMessage: "couldn't fetch tag"
+                    errorMessage: "couldn't get tag"
                 }
-            })
+            });
     }
 
-    const maybeSongsForTagging = await getSongsForTagging(
-        maybeTag,
-        BATCH_SIZE,
-    );
-    if (maybeSongsForTagging == null) {
+    const taggedSongs = await getTaggedSongs(tag);
+    if (taggedSongs == null) {
         return res
             .status(500)
             .json({
                 success: false,
                 debug: {
-                    errorMessage: "couldn't fetch songs for tagging"
+                    errorMessage: "couldn't fetch tagged songs"
                 }
             })
     }
-
-    const songsForTagging = maybeSongsForTagging.map(toSongForTagging);
 
     return res
         .status(200)
         .json({
             success: true,
-            tagName: maybeTag.tagName,
-            tagDescription: maybeTag.tagDescription,
-            itemCount: songsForTagging.length,
-            songsForTagging: songsForTagging,
-        });
+            tagName: tag.tagName,
+            tagDescription: tag.tagDescription,
+            itemCount: taggedSongs.length,
+            items: taggedSongs,
+        })
 }
 
-export { getSongsForTaggingRH };
+
+export { getTaggedSongsRh };
