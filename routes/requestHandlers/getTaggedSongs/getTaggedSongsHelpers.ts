@@ -14,6 +14,7 @@ export const getTaggedSongs = async (
         const rows = await flowDb
             .select({
                 songId: songsTable.songId,
+                tagId: songTagMatchTable.tagId,
                 songTitle: songsTable.songTitle,
                 artistStr: songsTable.songArtistName,
                 albumArtUrl: songsTable.songAlbumArtUrl,

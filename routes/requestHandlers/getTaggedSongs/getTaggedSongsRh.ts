@@ -4,6 +4,7 @@ import { getTaggedSongs } from "./getTaggedSongsHelpers";
 
 export type TaggedSong = {
     songId: number;
+    tagId: number;
     songTitle: string;
     artistStr: string;
     albumArtUrl: string;
@@ -13,6 +14,7 @@ export type TaggedSong = {
 type GetTaggedSongsResponse = 
     | {
         success: true;
+        tagId: number;
         tagName: string;
         tagDescription: string;
         itemCount: number;
@@ -71,6 +73,7 @@ const getTaggedSongsRh: RequestHandler = async (
         .status(200)
         .json({
             success: true,
+            tagId: tag.tagId,
             tagName: tag.tagName,
             tagDescription: tag.tagDescription,
             itemCount: taggedSongs.length,
