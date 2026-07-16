@@ -9,6 +9,11 @@ import { SongTagAndDuration } from "../../../models/SongTagAndDuration";
 import ms from "ms";
 import { songTagMatchTable } from "../../../schema/songTagMatch-schema";
 
+const moodDurationOverrides: Record<number, number> = {
+    7: ms("90m"),  // low-energy
+    11: ms("135m"),  // selects
+};
+
 /**
  * a mood is only valid, if there's enough playback minutes.
  */
@@ -28,9 +33,7 @@ export const getAllMoods = async (
                 tagId: snd.tagId,
                 moodName: snd.tagName,
                 // TODO impl mapping each mood to duration
-                durationMillis: snd.tagName === 'wind-down'
-                    ? ms("90m")
-                    : MOOD_DURATION_MS
+                durationMillis: moodDurationOverrides[snd.tagId] ?? MOOD_DURATION_MS,
             }
         });
 }
