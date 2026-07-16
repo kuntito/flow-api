@@ -16,6 +16,7 @@ import { getMoodNextSongReqHandler } from "./requestHandlers/getMoodNextSongRh/g
 import { getCiSongSearchRh } from "./requestHandlers/getCacheItemsSongSearch/getCiSongSearchRh";
 import { fetchSongTagsWithUntaggedSongsRh } from "./requestHandlers/fetchSongTagTypesWithUntagged/fetchSongTagTypeWithUntaggedRh";
 import { getTaggedSongsRh } from "./requestHandlers/getTaggedSongs/getTaggedSongsRh";
+import { commitTaggedSongsRh } from "./requestHandlers/commitTaggedSongs/commitTaggedSongs.rh";
 
 const flowRouter = express.Router();
 
@@ -54,6 +55,7 @@ flowRouter.get('/song-tags-with-untagged-songs', fetchSongTagsWithUntaggedSongsR
 
 flowRouter.get('/songsForTagging/:tagIdStr', getSongsForTaggingRH);
 flowRouter.get('/tagged-songs/:tagIdStr', getTaggedSongsRh);
+flowRouter.post('/tagged-songs/:tagIdStr', commitTaggedSongsRh);
 
 flowRouter.get('/moods', getMoodsReqHandler);
 
