@@ -3,4 +3,5 @@ export type SongSearchItem = {
     title: string;
     artistStr: string;
     albumArtUrl: string;
+    durationMillis: number;
 }

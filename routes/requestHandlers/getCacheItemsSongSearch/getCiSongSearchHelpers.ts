@@ -1,3 +1,4 @@
+import { duration } from "drizzle-orm/gel-core";
 import { flowDb } from "../../../clients/neonDbClient";
 import { logDbError } from "../../../helpers/dbHelpers";
 import { songsTable } from "../../../schema/song-schema";
@@ -13,6 +14,7 @@ export const getCacheItemsSongSearch = async (
                 title: songsTable.songTitle,
                 artistStr: songsTable.songArtistName,
                 albumArtUrl: songsTable.songAlbumArtUrl,
+                durationMillis: songsTable.songDurationMillis,
             })
             .from(songsTable);
 

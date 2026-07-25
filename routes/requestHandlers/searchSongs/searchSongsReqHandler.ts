@@ -11,6 +11,7 @@ const toSongSearchItem = (
     title: songEntity.songTitle,
     artistStr: songEntity.songArtistName,
     albumArtUrl: songEntity.songAlbumArtUrl,
+    durationMillis: songEntity.songDurationMillis,
 })
 
 
