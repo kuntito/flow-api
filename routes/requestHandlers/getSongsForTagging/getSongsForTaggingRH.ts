@@ -23,7 +23,7 @@ type GetSongsForTaggingResponse =
         debug: object;
     }
 
-const BATCH_SIZE = 16;
+const BATCH_SIZE = 32;
 const getSongsForTaggingRH: RequestHandler = async (
     req: Request,
     res: Response<GetSongsForTaggingResponse>
