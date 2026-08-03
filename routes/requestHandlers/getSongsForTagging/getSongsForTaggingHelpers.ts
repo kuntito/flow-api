@@ -1,4 +1,4 @@
-import { eq, notInArray } from "drizzle-orm";
+import { desc, eq, notInArray } from "drizzle-orm";
 import { flowDb } from "../../../clients/neonDbClient";
 import { logDbError } from "../../../helpers/dbHelpers";
 import { SongTagEntity, songTagTypesTable } from "../../../schema/songTagTypes-schema";
@@ -63,6 +63,11 @@ export const getSongsForTagging = async (
                         idsTaggedSongs
                     )
                     : undefined
+            )
+            .orderBy(
+                desc(
+                    songsTable.listenCount
+                )
             )
             .limit(batchSize);
 
