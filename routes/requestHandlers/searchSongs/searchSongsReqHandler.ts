@@ -12,6 +12,7 @@ const toSongSearchItem = (
     artistStr: songEntity.songArtistName,
     albumArtUrl: songEntity.songAlbumArtUrl,
     durationMillis: songEntity.songDurationMillis,
+    listenCount: songEntity.listenCount,
 })
 
 
