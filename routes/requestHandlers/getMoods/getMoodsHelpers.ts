@@ -28,7 +28,7 @@ export const getAllMoods = async (
     }
 
     return songTagAndDuration
-        .filter(snd => snd.totalDurationMillis >= MOOD_DURATION_MS)
+        .filter(snd => snd.totalDurationMillis >= (moodDurationOverrides[snd.tagId] ?? MOOD_DURATION_MS))
         .map( snd => {
             return {
                 tagId: snd.tagId,
