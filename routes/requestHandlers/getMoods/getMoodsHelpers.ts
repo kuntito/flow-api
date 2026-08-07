@@ -12,7 +12,7 @@ import { songTagMatchTable } from "../../../schema/songTagMatch-schema";
 const moodDurationOverrides: Record<number, number> = {
     7: ms("90m"),  // low-energy
     11: ms("135m"),  // selects
-    15: ms("10m"), // now
+    15: ms("45m"), // now
 };
 
 /**
@@ -22,19 +22,21 @@ export const getAllMoods = async (
 
 ): Promise<Mood[] | null> => {
 
+    // the amount of minutes the mood has
     const songTagAndDuration = await getSongTagsAndDuration();
     if (songTagAndDuration == null) {
         return null;
     }
 
     return songTagAndDuration
-        .filter(snd => snd.totalDurationMillis >= (moodDurationOverrides[snd.tagId] ?? MOOD_DURATION_MS))
+        // .filter(snd => snd.totalDurationMillis >= (moodDurationOverrides[snd.tagId] ?? MOOD_DURATION_MS))
         .map( snd => {
             return {
                 tagId: snd.tagId,
                 moodName: snd.tagName,
                 // TODO impl mapping each mood to duration
                 durationMillis: moodDurationOverrides[snd.tagId] ?? MOOD_DURATION_MS,
+                // this is the amount of minutes the client plays the mood.
             }
         });
 }
