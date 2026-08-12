@@ -16,6 +16,7 @@ export const getCacheItemsSongSearch = async (
                 albumArtUrl: songsTable.songAlbumArtUrl,
                 durationMillis: songsTable.songDurationMillis,
                 listenCount: songsTable.listenCount,
+                recency: songsTable.recency,
             })
             .from(songsTable);
 

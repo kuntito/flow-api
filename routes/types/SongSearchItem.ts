@@ -5,4 +5,5 @@ export type SongSearchItem = {
     albumArtUrl: string;
     durationMillis: number;
     listenCount: number;
+    recency: number;
 }
