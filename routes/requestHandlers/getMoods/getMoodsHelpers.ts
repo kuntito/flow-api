@@ -12,7 +12,7 @@ import { songTagMatchTable } from "../../../schema/songTagMatch-schema";
 const moodDurationOverrides: Record<number, number> = {
     7: ms("90m"),  // low-energy
     11: ms("135m"),  // selects
-    15: ms("45m"), // now
+    15: ms("90m"), // now
 };
 
 /**
