@@ -18,6 +18,7 @@ import { fetchSongTagsWithUntaggedSongsRh } from "./requestHandlers/fetchSongTag
 import { getTaggedSongsRh } from "./requestHandlers/getTaggedSongs/getTaggedSongsRh";
 import { commitTaggedSongsRh } from "./requestHandlers/commitTaggedSongs/commitTaggedSongs.rh";
 import { syncListenCountsRh } from "./requestHandlers/syncListenCounts/syncListenCount.rh";
+import { syncCiSongSearchRh } from "./requestHandlers/syncSongSearchCache.rh";
 
 const flowRouter = express.Router();
 
@@ -36,6 +37,9 @@ flowRouter.delete('/song/:songId', deleteSongReqHandler);
 flowRouter.get('/search', searchSongsReqHandler);
 flowRouter.get('/search-w-tags', searchSongWithTagReqHandler);
 flowRouter.get('/cache-song-search', getCiSongSearchRh);
+flowRouter.post(
+    '/cache-song-search/sync', syncCiSongSearchRh
+);
 
 flowRouter.get('/song/:songIdStr', getSongReqHandler);
 
