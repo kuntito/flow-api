@@ -1,6 +1,9 @@
 import { pgTable, integer, serial, text, bigint } from "drizzle-orm/pg-core";
 
 // TODO make table name a variable `songsTN`
+// TODO add created at, to id new songs.
+// listen history and count, can tell you if it's a new song you like
+// rather than an upload of an old song.
 export const songsTable = pgTable("songs", {
     songId: serial("id").primaryKey(),
     songS3Key: text("s3Key").notNull().unique(),
