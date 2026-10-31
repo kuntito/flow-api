@@ -19,6 +19,7 @@ import { getTaggedSongsRh } from "./requestHandlers/getTaggedSongs/getTaggedSong
 import { commitTaggedSongsRh } from "./requestHandlers/commitTaggedSongs/commitTaggedSongs.rh";
 import { syncListenCountsRh } from "./requestHandlers/syncListenCounts/syncListenCount.rh";
 import { syncCiSongSearchRh } from "./requestHandlers/syncSongSearchCache.rh";
+import { syncPlaylistsRh } from "./requestHandlers/syncPlaylist.rh";
 
 const flowRouter = express.Router();
 
@@ -65,5 +66,7 @@ flowRouter.post('/tagged-songs/:tagIdStr', commitTaggedSongsRh);
 flowRouter.get('/moods', getMoodsReqHandler);
 
 flowRouter.post('/sync-listen-counts', syncListenCountsRh);
+
+flowRouter.post('/playlists/sync', syncPlaylistsRh);
 
 export default flowRouter;
