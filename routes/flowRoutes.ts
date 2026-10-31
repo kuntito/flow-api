@@ -21,6 +21,8 @@ import { syncListenCountsRh } from "./requestHandlers/syncListenCounts/syncListe
 import { syncCiSongSearchRh } from "./requestHandlers/syncSongSearchCache.rh";
 import { syncPlaylistsRh } from "./requestHandlers/syncPlaylist.rh";
 
+// TODO anyone who knows my endpoints can call them and change my data.
+//  prevent that.
 const flowRouter = express.Router();
 
 flowRouter.get("/next-song", getNextSongReqHandler);
