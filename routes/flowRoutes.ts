@@ -20,6 +20,7 @@ import { commitTaggedSongsRh } from "./requestHandlers/commitTaggedSongs/commitT
 import { syncListenCountsRh } from "./requestHandlers/syncListenCounts/syncListenCount.rh";
 import { syncCiSongSearchRh } from "./requestHandlers/syncSongSearchCache.rh";
 import { syncPlaylistsRh } from "./requestHandlers/syncPlaylist.rh";
+import { getPlaylistNextSongRh } from "./requestHandlers/getPlaylistNextSong.rh";
 
 // TODO anyone who knows my endpoints can call them and change my data.
 //  prevent that.
@@ -70,5 +71,9 @@ flowRouter.get('/moods', getMoodsReqHandler);
 flowRouter.post('/sync-listen-counts', syncListenCountsRh);
 
 flowRouter.post('/playlists/sync', syncPlaylistsRh);
+flowRouter.post(
+    '/playlists/:playlistIdStr/next-song',
+    getPlaylistNextSongRh
+);
 
 export default flowRouter;
