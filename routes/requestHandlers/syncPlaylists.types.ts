@@ -3,6 +3,7 @@ export type SyncPlaylistItem = {
     playlistId: number;
     name: string;
     songIds: number[];
+    isAuto: boolean;
 }
 
 export type SyncPlaylistsInput = {
@@ -14,6 +15,7 @@ export type ResponsePlaylist = {
     playlistId: number;
     name: string;
     songIds: number[];
+    isAuto: boolean;
 }
 
 export type SyncPlaylistsResponse =

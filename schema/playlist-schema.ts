@@ -1,5 +1,5 @@
 import { sql } from "drizzle-orm";
-import { pgTable, text, check, integer } from "drizzle-orm/pg-core";
+import { pgTable, text, check, integer, boolean } from "drizzle-orm/pg-core";
 
 export const playlistsTN = "playlists"
 export const playlistsTable = pgTable(playlistsTN, {
@@ -8,6 +8,9 @@ export const playlistsTable = pgTable(playlistsTN, {
     playlistName: text("name")
         .unique()
         .notNull(),
+    isAuto: boolean("isAuto")
+        .notNull()
+        .default(false),
 }, (table) => ([
     check(
         "playlist_name_not_empty",

@@ -12,6 +12,7 @@ import { Transaction } from "../../util/types";
 type PlaylistItem = {
     playlistId: number;
     name: string;
+    isAuto: boolean;
 }
 
 type PlaylistAndSong = {
@@ -68,6 +69,13 @@ export const validateInputSyncPlaylists = (
         }
         seenPlaylistNames.add(playlistName);
 
+        if (typeof p.isAuto !== "boolean") {
+            return {
+                isValid: false,
+                reason: `${label}, playlist ${p.playlistId}: is auto must be true or false, it is ${p.isAuto}`,
+            };
+        }
+
         if (!Array.isArray(p.songIds)) {
             return {
                 isValid: false,
@@ -93,6 +101,7 @@ export const validateInputSyncPlaylists = (
             playlistId: p.playlistId,
             name: playlistName,
             songIds: Array.from(songIds),
+            isAuto: p.isAuto,
         });
     }
 
@@ -202,6 +211,7 @@ const replacePlaylists = async (
         return {
             playlistId: playlist.playlistId,
             playlistName: playlist.name,
+            isAuto: playlist.isAuto,
         };
     });
 
@@ -242,12 +252,48 @@ const buildResponsePlaylists = (
             playlistId: row.playlistId,
             name: row.name,
             songIds: songIdsByPlaylistId.get(row.playlistId) ?? [],
+            isAuto: row.isAuto,
         };
     });
 
     return playlists;
 }
 
+
+const getAllPlaylists = async (
+    tx: Transaction,
+): Promise<ResponsePlaylist[]> => {
+    
+    const playlistsQuery = tx
+        .select({
+            playlistId: playlistsTable.playlistId,
+            name: playlistsTable.playlistName,
+            isAuto: playlistsTable.isAuto,
+        })
+        .from(playlistsTable);
+
+    const playlistSongsQuery = tx
+        .select({
+            playlistId: playlistSongsTable.playlistId,
+            songId: playlistSongsTable.songId,
+        })
+        .from(playlistSongsTable);
+
+    const [
+        rowsPlaylist,
+        rowsPlaylistSong,
+    ] = await Promise.all([
+        playlistsQuery,
+        playlistSongsQuery,
+    ]);
+
+    const responsePlaylists = buildResponsePlaylists(
+        rowsPlaylist,
+        rowsPlaylistSong,
+    );
+
+    return responsePlaylists;
+}
 
 /**
  * playlists are created on the mobile client.
@@ -283,35 +329,9 @@ export const syncPlaylists = async (
                     );
                 }
 
+                const allPlaylists = await getAllPlaylists(tx);
 
-                const playlistsQuery = tx
-                    .select({
-                        playlistId: playlistsTable.playlistId,
-                        name: playlistsTable.playlistName,
-                    })
-                    .from(playlistsTable);
-
-                const playlistSongsQuery = tx
-                    .select({
-                        playlistId: playlistSongsTable.playlistId,
-                        songId: playlistSongsTable.songId,
-                    })
-                    .from(playlistSongsTable);
-
-                const [
-                    rowsPlaylist,
-                    rowsPlaylistSong,
-                ] = await Promise.all([
-                    playlistsQuery,
-                    playlistSongsQuery,
-                ]);
-
-                const responsePlaylists = buildResponsePlaylists(
-                    rowsPlaylist,
-                    rowsPlaylistSong,
-                );
-
-                return responsePlaylists;
+                return allPlaylists;
             }
         );
 

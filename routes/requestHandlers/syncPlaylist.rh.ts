@@ -19,8 +19,8 @@ export const syncPlaylistsRh = async (
                 },
             });
     }
-
     const playlists = await syncPlaylists(
+
         valResSyncPlaylists.data.playlists,
     );
 
