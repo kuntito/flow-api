@@ -21,6 +21,7 @@ import { syncListenCountsRh } from "./requestHandlers/syncListenCounts/syncListe
 import { syncCiSongSearchRh } from "./requestHandlers/syncSongSearchCache.rh";
 import { syncPlaylistsRh } from "./requestHandlers/syncPlaylist.rh";
 import { getPlaylistNextSongRh } from "./requestHandlers/getPlaylistNextSong.rh";
+import { syncListenHistoryRh } from "./requestHandlers/syncListenHistory.rh";
 
 // TODO anyone who knows my endpoints can call them and change my data.
 //  prevent that.
@@ -69,11 +70,14 @@ flowRouter.post('/tagged-songs/:tagIdStr', commitTaggedSongsRh);
 flowRouter.get('/moods', getMoodsReqHandler);
 
 flowRouter.post('/sync-listen-counts', syncListenCountsRh);
+flowRouter.post('/listen-history/sync', syncListenHistoryRh);
 
 flowRouter.post('/playlists/sync', syncPlaylistsRh);
 flowRouter.post(
     '/playlists/:playlistIdStr/next-song',
     getPlaylistNextSongRh
 );
+
+
 
 export default flowRouter;
