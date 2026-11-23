@@ -209,6 +209,9 @@ export default defineConfig({
 +   enables cross-origin requests, allows you specify what hosts can access this API:
     `npm install cors`
     `npm install -D @types/cors`
+
++   for verifying uuids:
+    `npm install uuid`
     
 
 ** DEPLOYING ON RENDER **
