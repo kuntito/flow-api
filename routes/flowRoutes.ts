@@ -17,7 +17,6 @@ import { getCiSongSearchRh } from "./requestHandlers/getCacheItemsSongSearch/get
 import { fetchSongTagsWithUntaggedSongsRh } from "./requestHandlers/fetchSongTagTypesWithUntagged/fetchSongTagTypeWithUntaggedRh";
 import { getTaggedSongsRh } from "./requestHandlers/getTaggedSongs/getTaggedSongsRh";
 import { commitTaggedSongsRh } from "./requestHandlers/commitTaggedSongs/commitTaggedSongs.rh";
-import { syncListenCountsRh } from "./requestHandlers/syncListenCounts/syncListenCount.rh";
 import { syncCiSongSearchRh } from "./requestHandlers/syncSongSearchCache.rh";
 import { syncPlaylistsRh } from "./requestHandlers/syncPlaylist.rh";
 import { getPlaylistNextSongRh } from "./requestHandlers/getPlaylistNextSong.rh";
@@ -68,8 +67,6 @@ flowRouter.get('/tagged-songs/:tagIdStr', getTaggedSongsRh);
 flowRouter.post('/tagged-songs/:tagIdStr', commitTaggedSongsRh);
 
 flowRouter.get('/moods', getMoodsReqHandler);
-
-flowRouter.post('/sync-listen-counts', syncListenCountsRh);
 flowRouter.post('/listen-history/sync', syncListenHistoryRh);
 
 flowRouter.post('/playlists/sync', syncPlaylistsRh);
