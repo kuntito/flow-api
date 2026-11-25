@@ -1,4 +1,4 @@
-import { inArray, sql, asc, gt } from "drizzle-orm";
+import { inArray, sql, asc, gt, eq } from "drizzle-orm";
 import { flowDb } from "../../clients/neonDbClient";
 import { ValidationResult } from "../../util/validation";
 import { isValidId } from "../helpers";
@@ -128,23 +128,62 @@ const dropUnknownSongEvents = async (
 const insertListenEvents = async (
     tx: Transaction,
     events: ListenEvent[],
-) => {
+): Promise<ListenEvent[]> => {
     const eventsWithKnownSongs = await dropUnknownSongEvents(
         tx,
         events,
     );
 
     if (eventsWithKnownSongs.length === 0) {
-        return;
+        return [];
     }
 
-    await tx
+    const insertedEvents = await tx
         .insert(listenHistoryTable)
         .values(eventsWithKnownSongs)
         .onConflictDoNothing({
             target: listenHistoryTable.eventId,
+        })
+        .returning({
+            eventId: listenHistoryTable.eventId,
+            songId: listenHistoryTable.songId,
+            listenedAt: listenHistoryTable.listenedAt,
         });
+
+    return insertedEvents;
 }
+
+
+const incrementListenCounts = async (
+    tx: Transaction,
+    insertedEvents: ListenEvent[],
+) => {
+    const listenCountBySongId = new Map<number, number>();
+
+    for (const event of insertedEvents) {
+        const currentCount = listenCountBySongId.get(event.songId) ?? 0;
+
+        listenCountBySongId.set(
+            event.songId,
+            currentCount + 1,
+        );
+    }
+
+    for (const [songId, listenCount] of listenCountBySongId) {
+        await tx
+            .update(songsTable)
+            .set({
+                listenCount: sql`${songsTable.listenCount} + ${listenCount}`,
+            })
+            .where(
+                eq(
+                    songsTable.songId,
+                    songId,
+                )
+            );
+    }
+}
+
 
 type ListenEventsAfter = {
     events: ListenEvent[];
@@ -200,9 +239,14 @@ export const syncListenEvents = async (
             async (tx) => {
                 await lockListenHistorySync(tx);
 
-                await insertListenEvents(
+                const insertedEvents = await insertListenEvents(
                     tx,
                     events,
+                );
+
+                await incrementListenCounts(
+                    tx,
+                    insertedEvents,
                 );
 
                 const eventsAfter = await getListenEventsAfter(
